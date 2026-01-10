@@ -293,14 +293,14 @@ export default function PotteryLanding() {
             </a>
 
             <a
-              href="https://instagram.com/its__arana"
+              href="https://instagram.com/its_ceramic"
               target="_blank"
               rel="noopener noreferrer"
               className="border border-gray-200 p-8 text-center hover:bg-gray-50 transition-colors"
             >
               <Instagram size={28} className="mx-auto mb-4 text-gray-700" />
               <p className="text-sm text-gray-600 mb-2">Instagram</p>
-              <p className="font-medium text-gray-900">@its__arana</p>
+              <p className="font-medium text-gray-900">@its_ceramic</p>
             </a>
           </div>
         </div>
