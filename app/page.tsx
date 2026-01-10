@@ -138,12 +138,8 @@ export default function PotteryLanding() {
       {/* Header */}
       <header className="border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-6 py-8">
-          <div className="flex items-baseline justify-between">
-            <div>
-              <h1 className="font-serif text-3xl font-semibold text-gray-900">its ceramic</h1>
-              <p className="text-xs text-gray-500 tracking-widest mt-1">BARCELONA</p>
-            </div>
-            <p className="text-sm text-gray-600">Cerámica artesanal</p>
+          <div className="flex justify-center">
+            <img src="/logo.jpg" alt="its ceramic" className="h-48 w-auto" />
           </div>
         </div>
       </header>
@@ -293,14 +289,14 @@ export default function PotteryLanding() {
             </a>
 
             <a
-              href="https://instagram.com/its_ceramic"
+              href="https://instagram.com/its___arana"
               target="_blank"
               rel="noopener noreferrer"
               className="border border-gray-200 p-8 text-center hover:bg-gray-50 transition-colors"
             >
               <Instagram size={28} className="mx-auto mb-4 text-gray-700" />
               <p className="text-sm text-gray-600 mb-2">Instagram</p>
-              <p className="font-medium text-gray-900">@its_ceramic</p>
+              <p className="font-medium text-gray-900">@its___arana</p>
             </a>
           </div>
         </div>
