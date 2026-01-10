@@ -1,117 +1,121 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Mail, Instagram } from 'lucide-react';
+import useSWR from 'swr';
+
+// Client-side fetcher for our internal API route
+const fetcher = (url: string) => fetch(url).then(async res => {
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text || 'Fetch error');
+  }
+  return res.json();
+});
+
+// Product type used in the UI — matches the API route normalization
+type Product = {
+  id: string;
+  name: string;
+  category: string;
+  material: string;
+  technique: string;
+  dimensions: string;
+  price: number;
+  images?: string[];
+  image?: string; // legacy emoji fallback
+  active?: boolean;
+  stock?: 'available' | 'sold';
+};
 
 export default function PotteryLanding() {
   const [selectedCategory, setSelectedCategory] = useState('all');
 
-  const products = [
-    {
-      id: 1,
-      name: 'Jarron Marmol Rosa',
-      category: 'jarron',
-      material: 'Gres PRAI',
-      technique: 'Torneado a mano y esmaltado brillante',
-      dimensions: '19cm altura × 12cm diámetro',
-      price: 68,
-      image: '🏺'
-    },
-    {
-      id: 2,
-      name: 'Jarron Marmol Azul',
-      category: 'jarron',
-      material: 'Gres PRAI',
-      technique: 'Torneado a mano y esmaltado brillante',
-      dimensions: '19cm altura × 12cm diámetro',
-      price: 61,
-      image: '🏺'
-    },
-    {
-      id: 3,
-      name: 'Jarron Marmol Gris',
-      category: 'jarron',
-      material: 'Gres PRAI',
-      technique: 'Torneado a mano y esmaltado brillante',
-      dimensions: '14cm altura × 12cm diámetro',
-      price: 61,
-      image: '🏺'
-    },
-    {
-      id: 4,
-      name: 'Jarron Rayas Calabaza',
-      category: 'jarron',
-      material: 'Gres PRAI',
-      technique: 'Torneado a mano y esmaltado brillante',
-      dimensions: '12cm altura × 12cm diámetro',
-      price: 47,
-      image: '🏺'
-    },
-    {
-      id: 5,
-      name: 'Jarron Rayas Fresa',
-      category: 'jarron',
-      material: 'Gres PRAI',
-      technique: 'Torneado a mano y esmaltado brillante',
-      dimensions: '20cm altura × 12cm diámetro',
-      price: 68,
-      image: '🏺'
-    },
-    {
-      id: 6,
-      name: 'Jarron Rayas Bombón',
-      category: 'jarron',
-      material: 'Gres PRAI',
-      technique: 'Torneado a mano y esmaltado brillante',
-      dimensions: '18cm altura × 12cm diámetro',
-      price: 47,
-      image: '🏺'
-    },
-    {
-      id: 7,
-      name: 'Jarra Nature Pecas',
-      category: 'jarra',
-      material: 'Gres Moteado',
-      technique: 'Torneado a mano y esmaltado mate',
-      dimensions: '15cm altura × 11cm diámetro',
-      price: 65,
-      image: '🏺'
-    },
-    {
-      id: 8,
-      name: 'Set Naranja Dot',
-      category: 'set',
-      material: 'Gres Moteado',
-      technique: 'Torneado a mano, acabado natural y brillante',
-      dimensions: '11cm y 4cm altura',
-      price: 85,
-      image: '🏺'
-    },
-    {
-      id: 9,
-      name: 'Taza Café Neriage',
-      category: 'taza',
-      material: 'Gres PRAI',
-      technique: 'Torneado en técnica neriage y esmaltado brillante',
-      dimensions: '6cm altura × 7cm diámetro',
-      price: 21,
-      image: '☕'
-    },
-    {
-      id: 10,
-      name: 'Taza Latte Salpicada',
-      category: 'taza',
-      material: 'Gres PRAI',
-      technique: 'Torneado a mano y esmaltado brillante',
-      dimensions: '6cm altura × 10cm diámetro',
-      price: 25,
-      image: '☕'
-    }
-  ];
+  // Hidden admin mode - activated by typing "ceramicadmin" anywhere on the page
+  const [showAdminControls, setShowAdminControls] = useState(false);
+  const [keyBuffer, setKeyBuffer] = useState('');
+  const ADMIN_TRIGGER = 'ceramicadmin'; // Type this anywhere to show admin controls
 
-  const filteredProducts = selectedCategory === 'all' 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ignore if user is typing in an input
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+
+      const newBuffer = (keyBuffer + e.key).slice(-ADMIN_TRIGGER.length);
+      setKeyBuffer(newBuffer);
+
+      if (newBuffer === ADMIN_TRIGGER) {
+        setShowAdminControls(prev => {
+          // When hiding admin controls, reset to ACTIVE only view
+          if (prev) {
+            setIsPreview(false);
+          }
+          return !prev;
+        });
+        setKeyBuffer('');
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [keyBuffer]);
+
+  // Products are now loaded from Airtable via `/api/products`.
+  // The API will return { products: Product[] } where each product has an `images` array.
+  const [isPreview, setIsPreview] = useState(false);
+  const [previewSecret, setPreviewSecret] = useState<string | null>(null);
+
+  // Load secret from localStorage on mount (client-side only)
+  useEffect(() => {
+    try {
+      const stored = window.localStorage.getItem('previewSecret');
+      if (stored) setPreviewSecret(stored);
+    } catch {}
+  }, []);
+
+  const buildKey = () => {
+    const params = new URLSearchParams();
+    if (isPreview) params.set('preview', '1');
+    if (previewSecret) params.set('previewSecret', previewSecret);
+    const q = params.toString();
+    return q ? `/api/products?${q}` : '/api/products';
+  };
+
+  const { data, error, isLoading, mutate } = useSWR(buildKey, fetcher, { revalidateOnFocus: false });
+  const products = data?.products ?? [];
+
+  // Helper to update preview secret in localStorage and state
+  const setSecret = () => {
+    const s = prompt('Enter preview secret (keep private)');
+    if (!s) return;
+    try { window.localStorage.setItem('previewSecret', s); } catch {}
+    setPreviewSecret(s);
+    // refetch with new secret
+    mutate();
+  };
+
+  const clearSecret = () => {
+    try { window.localStorage.removeItem('previewSecret'); } catch {}
+    setPreviewSecret(null);
+    mutate();
+  };
+
+  const filteredProducts: Product[] = selectedCategory === 'all' 
     ? products 
-    : products.filter(p => p.category === selectedCategory);
+    : products.filter((p: Product) => p.category === selectedCategory);
+
+  // Loading / error UI handled inline
+  const loadingUI = isLoading ? (
+    <p className="text-sm text-gray-500">Cargando productos…</p>
+  ) : null;
+
+  const errorUI = error ? (
+    <p className={`text-sm ${error.message?.includes('Unauthorized') ? 'text-yellow-600' : 'text-red-600'}`}>
+      {error.message?.includes('Unauthorized')
+        ? 'Acceso denegado. Verifica el secret e inténtalo de nuevo.'
+        : `Error cargando productos: ${String(error.message || error)}`}
+    </p>
+  ) : null;
 
   const categories = [
     { id: 'all', label: 'Todas' },
@@ -165,19 +169,43 @@ export default function PotteryLanding() {
       <section className="border-b border-gray-200 py-8 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="flex gap-4 flex-wrap">
-            {categories.map(cat => (
-              <button
-                key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
-                className={`text-sm font-medium transition-colors px-4 py-2 ${
-                  selectedCategory === cat.id
-                    ? 'text-gray-900 border-b-2 border-gray-900'
-                    : 'text-gray-500 hover:text-gray-700'
-                }`}
-              >
-                {cat.label}
-              </button>
-            ))}
+            <div className="flex gap-4 flex-wrap">
+              {categories.map(cat => (
+                <button
+                  key={cat.id}
+                  onClick={() => setSelectedCategory(cat.id)}
+                  className={`text-sm font-medium transition-colors px-4 py-2 ${
+                    selectedCategory === cat.id
+                      ? 'text-gray-900 border-b-2 border-gray-900'
+                      : 'text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+
+              {/* Admin preview controls - hidden until "ceramicadmin" is typed */}
+              {showAdminControls && (
+                <div className="ml-4 flex items-center space-x-3 bg-yellow-50 px-3 py-1 rounded border border-yellow-200">
+                  <span className="text-xs text-yellow-700">Admin</span>
+                  <button
+                    onClick={() => { setIsPreview(p => !p); mutate(); }}
+                    className={`text-xs px-2 py-1 border ${isPreview ? 'border-gray-900 text-gray-900' : 'border-gray-200 text-gray-500'} rounded`}
+                  >
+                    Inventory: {isPreview ? 'ALL' : 'ACTIVE'}
+                  </button>
+
+                  {previewSecret ? (
+                    <button onClick={clearSecret} className="text-xs text-gray-500">Clear secret</button>
+                  ) : (
+                    <button onClick={setSecret} className="text-xs text-gray-500">Set preview secret</button>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {loadingUI}
+            {errorUI}
           </div>
         </div>
       </section>
@@ -186,11 +214,23 @@ export default function PotteryLanding() {
       <section className="py-16 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-            {filteredProducts.map(product => (
+            {filteredProducts.map((product: Product) => (
               <div key={product.id} className="group">
                 {/* Image */}
-                <div className="bg-gray-100 aspect-square mb-8 flex items-center justify-center border border-gray-200">
-                  <span className="text-8xl opacity-20">{product.image}</span>
+                <div className="relative bg-gray-100 aspect-square mb-8 flex items-center justify-center border border-gray-200 overflow-hidden">
+                  {/* Sold ribbon */}
+                  {product.stock === 'sold' && (
+                    <div className="absolute top-4 right-[-35px] z-10 rotate-45 bg-stone-600 text-white text-xs font-medium py-1 px-10 shadow-sm">
+                      Agotado
+                    </div>
+                  )}
+                  {/* If Airtable provides images, use the first attachment; otherwise fall back to emoji */}
+                  {product.images && product.images.length > 0 ? (
+                    // Use native img for simplicity; image optimization can be added later
+                    <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-8xl opacity-20">{product.image || '🏺'}</span>
+                  )}
                 </div>
 
                 {/* Info */}
@@ -211,7 +251,7 @@ export default function PotteryLanding() {
 
                   <div className="pt-4 border-t border-gray-200">
                     <p className="font-serif text-2xl font-semibold text-gray-900">
-                      €{product.price}
+                      {new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(product.price)}
                     </p>
                   </div>
                 </div>
