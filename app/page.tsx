@@ -127,13 +127,6 @@ export default function PotteryLanding() {
 
   return (
     <div className="w-full min-h-screen bg-white text-gray-900">
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
-
-        .font-serif {
-          font-family: 'Playfair Display', serif;
-        }
-      `}</style>
 
       {/* Header */}
       <header className="border-b border-gray-200">
@@ -148,7 +141,7 @@ export default function PotteryLanding() {
       <section className="border-b border-gray-200 py-20 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="max-w-2xl">
-            <h2 className="font-serif text-5xl font-semibold text-gray-900 mb-6">
+            <h2 className="text-5xl font-semibold text-gray-900 mb-6">
               Piezas de gres hechas a mano
             </h2>
             <p className="text-lg text-gray-700 leading-relaxed mb-4">
@@ -232,7 +225,7 @@ export default function PotteryLanding() {
                 {/* Info */}
                 <div className="space-y-4">
                   <div>
-                    <h3 className="font-serif text-2xl font-semibold text-gray-900 mb-2">
+                    <h3 className="text-2xl font-semibold text-gray-900 mb-2">
                       {product.name}
                     </h3>
                     <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">
@@ -246,7 +239,7 @@ export default function PotteryLanding() {
                   </div>
 
                   <div className="pt-4 border-t border-gray-200">
-                    <p className="font-serif text-2xl font-semibold text-gray-900">
+                    <p className="text-2xl font-semibold text-gray-900">
                       {new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(product.price)}
                     </p>
                   </div>
@@ -274,7 +267,7 @@ export default function PotteryLanding() {
       {/* Contact */}
       <section className="border-t border-gray-200 py-20 px-6">
         <div className="max-w-4xl mx-auto text-center space-y-12">
-          <h2 className="font-serif text-4xl font-semibold text-gray-900">
+          <h2 className="text-4xl font-semibold text-gray-900">
             Contacta
           </h2>
 
