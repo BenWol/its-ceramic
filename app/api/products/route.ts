@@ -9,9 +9,11 @@ type Product = {
   id: string;
   name: string;
   category: string;
+  collection: string;
   material: string;
   technique: string;
   dimensions: string;
+  description: string;
   price: number;
   images: string[]; // URLs
   active: boolean;
@@ -88,9 +90,11 @@ export async function GET(req: Request) {
         id: r.id,
         name: f.Name || '',
         category: f.Category || '',
+        collection: f.Collection || '',
         material: f.Material || '',
         technique: f.Technique || '',
         dimensions: f.Dimensions || '',
+        description: f.Description || '',
         price: Number(f.Price ?? 0),
         images,
         active: !!f.Active,
@@ -100,13 +104,9 @@ export async function GET(req: Request) {
 
     const visible = preview ? products : products.filter(p => p.active);
 
-    // Sort: available items first, then sold items (both groups already sorted newest first from Airtable)
-    const available = visible.filter(p => p.stock === 'available');
-    const sold = visible.filter(p => p.stock === 'sold');
-    const sorted = [...available, ...sold];
-
+    // Keep original order from Airtable (sorted by Order field) - do NOT push sold items to end
     return NextResponse.json(
-      { products: sorted },
+      { products: visible },
       {
         status: 200,
         headers: {

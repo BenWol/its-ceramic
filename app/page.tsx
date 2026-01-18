@@ -1,306 +1,250 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Mail, Instagram } from 'lucide-react';
+import Link from 'next/link';
 import useSWR from 'swr';
+import ProductCard, { Product } from './components/ProductCard';
+import { useSiteImages } from './hooks/useSiteImages';
 
-// Client-side fetcher for our internal API route
-const fetcher = (url: string) => fetch(url).then(async res => {
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(text || 'Fetch error');
-  }
-  return res.json();
-});
+const fetcher = (url: string) => fetch(url).then(res => res.json());
 
-// Product type used in the UI — matches the API route normalization
-type Product = {
-  id: string;
-  name: string;
-  category: string;
-  material: string;
-  technique: string;
-  dimensions: string;
-  price: number;
-  images?: string[];
-  image?: string; // legacy emoji fallback
-  active?: boolean;
-  stock?: 'available' | 'sold';
-};
+const collections = [
+  {
+    slug: 'circus',
+    name: 'Circus',
+    imageKey: 'collection-circus',
+    description: 'Jarrones de estética expresiva y espíritu lúdico.',
+  },
+  {
+    slug: 'marmol',
+    name: 'Mármol',
+    imageKey: 'collection-marmol',
+    description: 'Inspirados en las vetas y contrastes del mármol.',
+  },
+  {
+    slug: 'tierra-natural',
+    name: 'Tierra Natural',
+    imageKey: 'collection-tierra-natural',
+    description: 'Cerámica de mesa en tonos tierra para el día a día.',
+  },
+];
 
-export default function PotteryLanding() {
-  const [selectedCategory, setSelectedCategory] = useState('all');
+export default function HomePage() {
+  const { data } = useSWR('/api/products', fetcher);
+  const products: Product[] = data?.products ?? [];
+  const { getImage, getAlt } = useSiteImages();
 
-  // Hidden admin mode - activated by typing "ceramicadmin" anywhere on the page
-  const [showAdminControls, setShowAdminControls] = useState(false);
-  const [keyBuffer, setKeyBuffer] = useState('');
-  const ADMIN_TRIGGER = 'ceramicadmin'; // Type this anywhere to show admin controls
+  // Featured products (first 4)
+  const featuredProducts = products.slice(0, 4);
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Ignore if user is typing in an input
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
-
-      const newBuffer = (keyBuffer + e.key).slice(-ADMIN_TRIGGER.length);
-      setKeyBuffer(newBuffer);
-
-      if (newBuffer === ADMIN_TRIGGER) {
-        setShowAdminControls(prev => {
-          // When hiding admin controls, reset to ACTIVE only view
-          if (prev) {
-            setIsPreview(false);
-          }
-          return !prev;
-        });
-        setKeyBuffer('');
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [keyBuffer]);
-
-  // Products are now loaded from Airtable via `/api/products`.
-  // The API will return { products: Product[] } where each product has an `images` array.
-  const [isPreview, setIsPreview] = useState(false);
-  const [previewSecret, setPreviewSecret] = useState<string | null>(null);
-
-  // Load secret from localStorage on mount (client-side only)
-  useEffect(() => {
-    try {
-      const stored = window.localStorage.getItem('previewSecret');
-      if (stored) setPreviewSecret(stored);
-    } catch {}
-  }, []);
-
-  const buildKey = () => {
-    const params = new URLSearchParams();
-    if (isPreview) params.set('preview', '1');
-    if (previewSecret) params.set('previewSecret', previewSecret);
-    const q = params.toString();
-    return q ? `/api/products?${q}` : '/api/products';
-  };
-
-  const { data, error, isLoading, mutate } = useSWR(buildKey, fetcher, { revalidateOnFocus: false });
-  const products = data?.products ?? [];
-
-  // Helper to update preview secret in localStorage and state
-  const setSecret = () => {
-    const s = prompt('Enter preview secret (keep private)');
-    if (!s) return;
-    try { window.localStorage.setItem('previewSecret', s); } catch {}
-    setPreviewSecret(s);
-    // refetch with new secret
-    mutate();
-  };
-
-  const clearSecret = () => {
-    try { window.localStorage.removeItem('previewSecret'); } catch {}
-    setPreviewSecret(null);
-    mutate();
-  };
-
-  const filteredProducts: Product[] = selectedCategory === 'all' 
-    ? products 
-    : products.filter((p: Product) => p.category === selectedCategory);
-
-  // Loading / error UI handled inline
-  const loadingUI = isLoading ? (
-    <p className="text-sm text-gray-500">Cargando productos…</p>
-  ) : null;
-
-  const errorUI = error ? (
-    <p className={`text-sm ${error.message?.includes('Unauthorized') ? 'text-yellow-600' : 'text-red-600'}`}>
-      {error.message?.includes('Unauthorized')
-        ? 'Acceso denegado. Verifica el secret e inténtalo de nuevo.'
-        : `Error cargando productos: ${String(error.message || error)}`}
-    </p>
-  ) : null;
-
-  const categories = [
-    { id: 'all', label: 'Todas' },
-    { id: 'jarron', label: 'Jarrones' },
-    { id: 'jarra', label: 'Jarras' },
-    { id: 'set', label: 'Sets' },
-    { id: 'taza', label: 'Tazas' }
-  ];
+  const heroImage = getImage('hero');
+  const aboutImage = getImage('about-artist');
 
   return (
-    <div className="w-full min-h-screen bg-white text-gray-900">
-
-      {/* Header */}
-      <header className="border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-6 py-8">
-          <div className="flex justify-center">
-            <img src="/logo.jpg" alt="its ceramic" className="h-48 w-auto" />
-          </div>
-        </div>
-      </header>
-
+    <div className="bg-white">
       {/* Hero */}
-      <section className="border-b border-gray-200 py-20 px-6">
+      <section className="relative h-[70vh] min-h-[500px] flex items-center justify-center bg-gray-100 border-b border-gray-200">
+        {/* Hero image */}
+        {heroImage ? (
+          <img
+            src={heroImage}
+            alt={getAlt('hero', 'Cerámica artesanal')}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="text-gray-400">Imagen principal</span>
+          </div>
+        )}
+
+        {/* Overlay for text readability */}
+        {heroImage && <div className="absolute inset-0 bg-white/40" />}
+
+        {/* Overlay content */}
+        <div className="relative z-10 text-center px-6">
+          <h1 className="text-4xl md:text-6xl font-semibold text-gray-900 mb-4">
+            Cerámica artesanal
+          </h1>
+          <p className="text-lg md:text-xl text-gray-700 mb-8 max-w-xl mx-auto">
+            Piezas de gres torneadas y esmaltadas completamente a mano. Cada pieza es única.
+          </p>
+          <Link
+            href="/colecciones"
+            className="inline-block bg-gray-900 text-white py-4 px-8 font-medium hover:bg-gray-800 transition-colors"
+          >
+            Ver colecciones
+          </Link>
+        </div>
+      </section>
+
+      {/* Collections Preview */}
+      <section className="py-20 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="max-w-2xl">
-            <h2 className="text-5xl font-semibold text-gray-900 mb-6">
-              Piezas de gres hechas a mano
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-semibold text-gray-900 mb-4">
+              Colecciones
             </h2>
-            <p className="text-lg text-gray-700 leading-relaxed mb-4">
-              Cerámica artesanal torneada y esmaltada completamente a mano. Cada pieza es única.
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Tres líneas que hablan distintos acentos dentro del mismo lenguaje artesanal.
             </p>
-            <p className="text-sm text-gray-600">
-              Técnicas tradicionales · Producción limitada · Encargos personalizados
-            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {collections.map((collection) => {
+              const imageUrl = getImage(collection.imageKey);
+              return (
+                <Link
+                  key={collection.slug}
+                  href={`/colecciones/${collection.slug}`}
+                  className="group"
+                >
+                  <div className="aspect-[4/3] bg-gray-100 border border-gray-200 mb-4 overflow-hidden">
+                    {imageUrl ? (
+                      <img
+                        src={imageUrl}
+                        alt={collection.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <span className="text-gray-400 text-sm">{collection.name}</span>
+                      </div>
+                    )}
+                  </div>
+                  <h3 className="text-xl font-medium text-gray-900 mb-2 group-hover:text-gray-600 transition-colors">
+                    {collection.name}
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    {collection.description}
+                  </p>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* Category Filter */}
-      <section className="border-b border-gray-200 py-8 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex gap-4 flex-wrap">
-            <div className="flex gap-4 flex-wrap">
-              {categories.map(cat => (
-                <button
-                  key={cat.id}
-                  onClick={() => setSelectedCategory(cat.id)}
-                  className={`text-sm font-medium transition-colors px-4 py-2 ${
-                    selectedCategory === cat.id
-                      ? 'text-gray-900 border-b-2 border-gray-900'
-                      : 'text-gray-500 hover:text-gray-700'
-                  }`}
-                >
-                  {cat.label}
-                </button>
+      {/* Featured Products */}
+      {featuredProducts.length > 0 && (
+        <section className="py-20 px-6 bg-gray-50 border-t border-gray-200">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-semibold text-gray-900 mb-4">
+                Piezas destacadas
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {featuredProducts.map((product) => (
+                <ProductCard key={product.id} product={product} showCollection />
               ))}
+            </div>
 
-              {/* Admin preview controls - hidden until "ceramicadmin" is typed */}
-              {showAdminControls && (
-                <div className="ml-4 flex items-center space-x-3 bg-yellow-50 px-3 py-1 rounded border border-yellow-200">
-                  <span className="text-xs text-yellow-700">Admin</span>
-                  <button
-                    onClick={() => { setIsPreview(p => !p); mutate(); }}
-                    className={`text-xs px-2 py-1 border ${isPreview ? 'border-gray-900 text-gray-900' : 'border-gray-200 text-gray-500'} rounded`}
-                  >
-                    Inventory: {isPreview ? 'ALL' : 'ACTIVE'}
-                  </button>
+            <div className="text-center mt-12">
+              <Link
+                href="/piezas"
+                className="inline-block border border-gray-900 text-gray-900 py-3 px-8 font-medium hover:bg-gray-900 hover:text-white transition-colors"
+              >
+                Ver todas las piezas
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
 
-                  {previewSecret ? (
-                    <button onClick={clearSecret} className="text-xs text-gray-500">Clear secret</button>
-                  ) : (
-                    <button onClick={setSecret} className="text-xs text-gray-500">Set preview secret</button>
-                  )}
+      {/* About Teaser */}
+      <section className="py-20 px-6 border-t border-gray-200">
+        <div className="max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Image */}
+            <div className="aspect-square bg-gray-100 border border-gray-200 overflow-hidden order-2 lg:order-1">
+              {aboutImage ? (
+                <img
+                  src={aboutImage}
+                  alt={getAlt('about-artist', 'La artista')}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center">
+                  <span className="text-gray-400 text-sm">Foto del artista</span>
                 </div>
               )}
             </div>
 
-            {loadingUI}
-            {errorUI}
+            {/* Text */}
+            <div className="order-1 lg:order-2">
+              <h2 className="text-3xl font-semibold text-gray-900 mb-6">
+                Hecho a mano en Barcelona
+              </h2>
+              <p className="text-gray-600 leading-relaxed mb-6">
+                Cada pieza está torneada y esmaltada completamente a mano, siguiendo técnicas tradicionales. Creo en la producción limitada y en el valor de lo hecho a mano.
+              </p>
+              <Link
+                href="/sobre-mi"
+                className="text-gray-900 font-medium hover:text-gray-600 transition-colors"
+              >
+                Conocer más →
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Products */}
-      <section className="py-16 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-            {filteredProducts.map((product: Product) => (
-              <div key={product.id} className="group">
-                {/* Image */}
-                <div className="relative bg-gray-100 aspect-square mb-8 flex items-center justify-center border border-gray-200 overflow-hidden">
-                  {/* Sold ribbon */}
-                  {product.stock === 'sold' && (
-                    <div className="absolute top-4 right-[-35px] z-10 rotate-45 bg-stone-600 text-white text-xs font-medium py-1 px-10 shadow-sm">
-                      Agotado
+      {/* Instagram Section */}
+      <section className="py-20 px-6 bg-gray-50 border-t border-gray-200">
+        <div className="max-w-7xl mx-auto text-center">
+          <h2 className="text-3xl font-semibold text-gray-900 mb-4">
+            @its___arana
+          </h2>
+          <p className="text-gray-600 mb-8">
+            Sígueme en Instagram para ver el proceso y las últimas novedades.
+          </p>
+
+          {/* Instagram Grid - uses site images if available */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            {[1, 2, 3, 4].map((i) => {
+              const igImage = getImage(`instagram-${i}`);
+              return (
+                <div key={i} className="aspect-square bg-gray-200 border border-gray-300 overflow-hidden">
+                  {igImage ? (
+                    <img src={igImage} alt={`Instagram ${i}`} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <span className="text-gray-400 text-xs">IG Post {i}</span>
                     </div>
                   )}
-                  {/* If Airtable provides images, use the first attachment; otherwise fall back to emoji */}
-                  {product.images && product.images.length > 0 ? (
-                    // Use native img for simplicity; image optimization can be added later
-                    <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover" />
-                  ) : (
-                    <span className="text-8xl opacity-20">{product.image || '🏺'}</span>
-                  )}
                 </div>
-
-                {/* Info */}
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="text-2xl font-semibold text-gray-900 mb-2">
-                      {product.name}
-                    </h3>
-                    <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">
-                      {product.material}
-                    </p>
-                  </div>
-
-                  <div className="space-y-2 text-sm text-gray-700">
-                    <p>{product.technique}</p>
-                    <p className="text-gray-600">{product.dimensions}</p>
-                  </div>
-
-                  <div className="pt-4 border-t border-gray-200">
-                    <p className="text-2xl font-semibold text-gray-900">
-                      {new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(product.price)}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
+
+          <a
+            href="https://instagram.com/its___arana"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block border border-gray-900 text-gray-900 py-3 px-8 font-medium hover:bg-gray-900 hover:text-white transition-colors"
+          >
+            Seguir en Instagram
+          </a>
         </div>
       </section>
 
-      {/* About */}
-      <section className="border-t border-gray-200 py-16 px-6 bg-gray-50">
-        <div className="max-w-2xl mx-auto text-center space-y-6">
-          <p className="text-sm text-gray-600">
-            Cada pieza es realizada de forma completamente artesanal. No existen dos piezas idénticas. Disponibles encargos personalizados en colores y tamaños específicos.
-          </p>
-          <div className="space-y-3 text-sm text-gray-700">
-            <p>• Torneadas a mano</p>
-            <p>• Esmaltadas a mano</p>
-            <p>• Envíos a toda Europa</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact */}
-      <section className="border-t border-gray-200 py-20 px-6">
-        <div className="max-w-4xl mx-auto text-center space-y-12">
-          <h2 className="text-4xl font-semibold text-gray-900">
-            Contacta
+      {/* Contact CTA */}
+      <section className="py-20 px-6 border-t border-gray-200">
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="text-3xl font-semibold text-gray-900 mb-4">
+            ¿Tienes algo en mente?
           </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <a
-              href="mailto:itsasoarana@gmail.com"
-              className="border border-gray-200 p-8 text-center hover:bg-gray-50 transition-colors"
-            >
-              <Mail size={28} className="mx-auto mb-4 text-gray-700" />
-              <p className="text-sm text-gray-600 mb-2">Email</p>
-              <p className="font-medium text-gray-900">itsasoarana@gmail.com</p>
-            </a>
-
-            <a
-              href="https://instagram.com/its___arana"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="border border-gray-200 p-8 text-center hover:bg-gray-50 transition-colors"
-            >
-              <Instagram size={28} className="mx-auto mb-4 text-gray-700" />
-              <p className="text-sm text-gray-600 mb-2">Instagram</p>
-              <p className="font-medium text-gray-900">@its___arana</p>
-            </a>
-          </div>
+          <p className="text-gray-600 mb-8">
+            Todas las piezas se realizan bajo encargo. Si buscas algo específico, escríbeme y lo diseñamos juntas.
+          </p>
+          <Link
+            href="/contacto"
+            className="inline-block bg-gray-900 text-white py-4 px-8 font-medium hover:bg-gray-800 transition-colors"
+          >
+            Contactar
+          </Link>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="border-t border-gray-200 py-8 px-6 bg-white">
-        <div className="max-w-7xl mx-auto text-center text-xs text-gray-600">
-          <p>© 2025 its ceramic Barcelona. Todos los derechos reservados.</p>
-        </div>
-      </footer>
     </div>
   );
 }
