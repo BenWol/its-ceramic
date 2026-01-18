@@ -18,24 +18,35 @@ export function useSiteContent() {
 
   const content: Record<string, SiteContent> = data?.content ?? {};
 
+  // Helper to check if value is empty or placeholder
+  const isEmpty = (value: string | undefined): boolean => {
+    if (!value) return true;
+    const trimmed = value.trim();
+    return trimmed === '' || trimmed === '-' || trimmed === '—';
+  };
+
   // Helper to get image URL by key, with optional fallback
   const getImage = (key: string, fallback?: string): string => {
-    return content[key]?.image || fallback || '';
+    const value = content[key]?.image;
+    return isEmpty(value) ? (fallback || '') : value!;
   };
 
   // Helper to get alt text
   const getAlt = (key: string, fallback?: string): string => {
-    return content[key]?.alt || fallback || '';
+    const value = content[key]?.alt;
+    return isEmpty(value) ? (fallback || '') : value!;
   };
 
   // Helper to get title
   const getTitle = (key: string, fallback?: string): string => {
-    return content[key]?.title || fallback || '';
+    const value = content[key]?.title;
+    return isEmpty(value) ? (fallback || '') : value!;
   };
 
   // Helper to get description
   const getDescription = (key: string, fallback?: string): string => {
-    return content[key]?.description || fallback || '';
+    const value = content[key]?.description;
+    return isEmpty(value) ? (fallback || '') : value!;
   };
 
   // Get full content object

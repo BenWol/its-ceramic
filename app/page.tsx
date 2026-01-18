@@ -3,41 +3,48 @@
 import Link from 'next/link';
 import useSWR from 'swr';
 import ProductCard, { Product } from './components/ProductCard';
-import { useSiteImages } from './hooks/useSiteImages';
+import InstagramEmbed from './components/InstagramEmbed';
+import { useSiteContent } from './hooks/useSiteImages';
 
 const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 const collections = [
   {
     slug: 'circus',
-    name: 'Circus',
-    imageKey: 'collection-circus',
-    description: 'Jarrones de estética expresiva y espíritu lúdico.',
+    key: 'collection-circus',
+    fallbackName: 'Circus',
+    fallbackDescription: 'Jarrones de estética expresiva y espíritu lúdico.',
   },
   {
     slug: 'marmol',
-    name: 'Mármol',
-    imageKey: 'collection-marmol',
-    description: 'Inspirados en las vetas y contrastes del mármol.',
+    key: 'collection-marmol',
+    fallbackName: 'Mármol',
+    fallbackDescription: 'Inspirados en las vetas y contrastes del mármol.',
   },
   {
-    slug: 'tierra-natural',
-    name: 'Tierra Natural',
-    imageKey: 'collection-tierra-natural',
-    description: 'Cerámica de mesa en tonos tierra para el día a día.',
+    slug: 'materia',
+    key: 'collection-materia',
+    fallbackName: 'Materia',
+    fallbackDescription: 'Cerámica de mesa en tonos tierra para el día a día.',
   },
 ];
 
 export default function HomePage() {
   const { data } = useSWR('/api/products', fetcher);
   const products: Product[] = data?.products ?? [];
-  const { getImage, getAlt } = useSiteImages();
+  const { getImage, getAlt, getTitle, getDescription } = useSiteContent();
 
   // Featured products (first 4)
   const featuredProducts = products.slice(0, 4);
 
   const heroImage = getImage('hero');
-  const aboutImage = getImage('about-artist');
+  const aboutImage = getImage('about-home-image');
+
+  // Text content with fallbacks
+  const heroTitle = getTitle('hero', 'Cerámica artesanal');
+  const heroDescription = getDescription('hero', 'Piezas de gres torneadas y esmaltadas completamente a mano. Cada pieza es única.');
+  const aboutTitle = getTitle('about-home', 'Hecho a mano en Barcelona');
+  const aboutDescription = getDescription('about-home', 'Cada pieza está torneada y esmaltada completamente a mano, siguiendo técnicas tradicionales. Creo en la producción limitada y en el valor de lo hecho a mano.');
 
   return (
     <div className="bg-white">
@@ -62,10 +69,10 @@ export default function HomePage() {
         {/* Overlay content */}
         <div className="relative z-10 text-center px-6">
           <h1 className="text-4xl md:text-6xl font-semibold text-gray-900 mb-4">
-            Cerámica artesanal
+            {heroTitle}
           </h1>
           <p className="text-lg md:text-xl text-gray-700 mb-8 max-w-xl mx-auto">
-            Piezas de gres torneadas y esmaltadas completamente a mano. Cada pieza es única.
+            {heroDescription}
           </p>
           <Link
             href="/colecciones"
@@ -84,13 +91,16 @@ export default function HomePage() {
               Colecciones
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Tres líneas que hablan distintos acentos dentro del mismo lenguaje artesanal.
+              {getDescription('collections-intro', 'Tres líneas que hablan distintos acentos dentro del mismo lenguaje artesanal.')}
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {collections.map((collection) => {
-              const imageUrl = getImage(collection.imageKey);
+              const imageUrl = getImage(collection.key);
+              const title = getTitle(collection.key, collection.fallbackName);
+              const description = getDescription(collection.key, collection.fallbackDescription);
+
               return (
                 <Link
                   key={collection.slug}
@@ -101,20 +111,20 @@ export default function HomePage() {
                     {imageUrl ? (
                       <img
                         src={imageUrl}
-                        alt={collection.name}
+                        alt={title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <span className="text-gray-400 text-sm">{collection.name}</span>
+                        <span className="text-gray-400 text-sm">{title}</span>
                       </div>
                     )}
                   </div>
                   <h3 className="text-xl font-medium text-gray-900 mb-2 group-hover:text-gray-600 transition-colors">
-                    {collection.name}
+                    {title}
                   </h3>
                   <p className="text-sm text-gray-600">
-                    {collection.description}
+                    {description}
                   </p>
                 </Link>
               );
@@ -160,7 +170,7 @@ export default function HomePage() {
               {aboutImage ? (
                 <img
                   src={aboutImage}
-                  alt={getAlt('about-artist', 'La artista')}
+                  alt={getAlt('about-home-image', 'Sobre mí')}
                   className="w-full h-full object-cover"
                 />
               ) : (
@@ -173,10 +183,10 @@ export default function HomePage() {
             {/* Text */}
             <div className="order-1 lg:order-2">
               <h2 className="text-3xl font-semibold text-gray-900 mb-6">
-                Hecho a mano en Barcelona
+                {aboutTitle}
               </h2>
               <p className="text-gray-600 leading-relaxed mb-6">
-                Cada pieza está torneada y esmaltada completamente a mano, siguiendo técnicas tradicionales. Creo en la producción limitada y en el valor de lo hecho a mano.
+                {aboutDescription}
               </p>
               <Link
                 href="/sobre-mi"
@@ -191,30 +201,17 @@ export default function HomePage() {
 
       {/* Instagram Section */}
       <section className="py-20 px-6 bg-gray-50 border-t border-gray-200">
-        <div className="max-w-7xl mx-auto text-center">
+        <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl font-semibold text-gray-900 mb-4">
             @its___arana
           </h2>
           <p className="text-gray-600 mb-8">
-            Sígueme en Instagram para ver el proceso y las últimas novedades.
+            {getDescription('instagram-intro', 'Sígueme en Instagram para ver el proceso y las últimas novedades.')}
           </p>
 
-          {/* Instagram Grid - uses site images if available */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            {[1, 2, 3, 4].map((i) => {
-              const igImage = getImage(`instagram-${i}`);
-              return (
-                <div key={i} className="aspect-square bg-gray-200 border border-gray-300 overflow-hidden">
-                  {igImage ? (
-                    <img src={igImage} alt={`Instagram ${i}`} className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <span className="text-gray-400 text-xs">IG Post {i}</span>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+          {/* Instagram Embed */}
+          <div className="mb-8">
+            <InstagramEmbed username="its___arana" />
           </div>
 
           <a
@@ -232,10 +229,10 @@ export default function HomePage() {
       <section className="py-20 px-6 border-t border-gray-200">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-3xl font-semibold text-gray-900 mb-4">
-            ¿Tienes algo en mente?
+            {getTitle('contact-cta', '¿Tienes algo en mente?')}
           </h2>
           <p className="text-gray-600 mb-8">
-            Todas las piezas se realizan bajo encargo. Si buscas algo específico, escríbeme y lo diseñamos juntas.
+            {getDescription('contact-cta', 'Todas las piezas se realizan bajo encargo. Si buscas algo específico, escríbeme y lo diseñamos juntas.')}
           </p>
           <Link
             href="/contacto"

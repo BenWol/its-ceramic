@@ -17,9 +17,9 @@ const collections = [
     fallbackDescription: 'Jarrones de cerámica artesanal inspirados en las vetas y contrastes del mármol. Piezas únicas de carácter decorativo, donde el color y la superficie adquieren protagonismo.',
   },
   {
-    slug: 'tierra-natural',
-    key: 'collection-tierra-natural',
-    fallbackName: 'Colección Tierra Natural',
+    slug: 'materia',
+    key: 'collection-materia',
+    fallbackName: 'Colección Materia',
     fallbackDescription: 'Cerámica artesanal de mesa en tonos tierra, pensada para el uso cotidiano. Piezas funcionales de formas orgánicas que acompañan la mesa del día a día.',
   },
 ];
