@@ -1,4 +1,9 @@
 import { NextResponse } from 'next/server';
+import { Resend } from 'resend';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+const CREATOR_EMAIL = 'itsasoarana@gmail.com';
 
 export async function POST(req: Request) {
   try {
@@ -11,38 +16,46 @@ export async function POST(req: Request) {
       );
     }
 
-    // For now, we'll log the contact request
-    // In production, you'd integrate with an email service like:
-    // - Resend (resend.com)
-    // - SendGrid
-    // - Nodemailer with SMTP
-    // - Or a form service like Formspree
+    const contactTypeLabel = contactType === 'encargo' ? 'Encargo personalizado' : 'Interés en pieza';
 
-    console.log('=== New Contact Request ===');
-    console.log('From:', email);
-    console.log('Subject:', subject);
-    console.log('Product:', productName);
-    console.log('Type:', contactType);
-    console.log('Message:', message);
-    console.log('===========================');
+    // Email to the creator
+    await resend.emails.send({
+      from: 'its ceramic <onboarding@resend.dev>',
+      to: CREATOR_EMAIL,
+      replyTo: email,
+      subject: subject || `Nueva consulta: ${contactTypeLabel}`,
+      text: `Nueva consulta de contacto
 
-    // TODO: Implement actual email sending
-    // Example with Resend:
-    //
-    // import { Resend } from 'resend';
-    // const resend = new Resend(process.env.RESEND_API_KEY);
-    //
-    // await resend.emails.send({
-    //   from: 'its ceramic <noreply@itsceramic.com>',
-    //   to: 'itsasoarana@gmail.com',
-    //   replyTo: email,
-    //   subject: subject,
-    //   text: `De: ${email}\n\n${message}`,
-    // });
+De: ${email}
+Tipo: ${contactTypeLabel}
+${productName ? `Pieza: ${productName}` : ''}
 
-    // For now, simulate success
-    // Remove this delay in production
-    await new Promise(resolve => setTimeout(resolve, 500));
+Mensaje:
+${message}
+
+---
+Puedes responder directamente a este email para contactar con ${email}`,
+    });
+
+    // Confirmation email to the customer
+    await resend.emails.send({
+      from: 'its ceramic <onboarding@resend.dev>',
+      to: email,
+      subject: 'Hemos recibido tu mensaje - its ceramic',
+      text: `¡Hola!
+
+Gracias por ponerte en contacto con its ceramic. Hemos recibido tu mensaje y te responderemos lo antes posible.
+
+Tu consulta:
+${message}
+
+${productName ? `Pieza de interés: ${productName}` : ''}
+
+---
+its ceramic
+Instagram: @its___arana
+Email: ${CREATOR_EMAIL}`,
+    });
 
     return NextResponse.json({ success: true });
   } catch (err: any) {
