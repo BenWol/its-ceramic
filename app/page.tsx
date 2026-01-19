@@ -38,7 +38,7 @@ export default function HomePage() {
   const featuredProducts = products.slice(0, 4);
 
   const heroImage = getImage('hero');
-  const aboutImage = getImage('about-home-image');
+  const aboutImage = getImage('about-home');
 
   // Text content with fallbacks
   const heroTitle = getTitle('hero', 'Cerámica artesanal');
@@ -58,7 +58,8 @@ export default function HomePage() {
             className="absolute inset-0 w-full h-full object-cover"
           />
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center">
+          <div className="absolute inset-0 flex items-center justify-center flex-col gap-2">
+            <span className="text-gray-400 text-xs font-mono">[hero:image]</span>
             <span className="text-gray-400">Imagen principal</span>
           </div>
         )}
@@ -115,8 +116,9 @@ export default function HomePage() {
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <span className="text-gray-400 text-sm">{title}</span>
+                      <div className="w-full h-full flex items-center justify-center flex-col gap-1">
+                        <span className="text-gray-400 text-xs font-mono">[{collection.key}:image]</span>
+                        <span className="text-gray-400 text-sm">{collection.fallbackName}</span>
                       </div>
                     )}
                   </div>
@@ -170,11 +172,12 @@ export default function HomePage() {
               {aboutImage ? (
                 <img
                   src={aboutImage}
-                  alt={getAlt('about-home-image', 'Sobre mí')}
+                  alt={getAlt('about-home', 'Sobre mí')}
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center">
+                <div className="w-full h-full flex items-center justify-center flex-col gap-1">
+                  <span className="text-gray-400 text-xs font-mono">[about-home:image]</span>
                   <span className="text-gray-400 text-sm">Foto del artista</span>
                 </div>
               )}

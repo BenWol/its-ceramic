@@ -67,8 +67,9 @@ export default function ColeccionesPage() {
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <span className="text-gray-400 text-sm">Imagen de {title}</span>
+                      <div className="w-full h-full flex items-center justify-center flex-col gap-1">
+                        <span className="text-gray-400 text-xs font-mono">[{collection.key}:image]</span>
+                        <span className="text-gray-400 text-sm">{collection.fallbackName}</span>
                       </div>
                     )}
                   </div>

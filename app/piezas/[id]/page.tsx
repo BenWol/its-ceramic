@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import ProductCard, { Product } from '../../components/ProductCard';
 import ContactModal, { ContactType } from '../../components/ContactModal';
+import { useSiteContent } from '../../hooks/useSiteImages';
 
 const fetcher = (url: string) => fetch(url).then(res => res.json());
 
@@ -19,6 +20,7 @@ export default function ProductDetailPage() {
 
   const { data, isLoading } = useSWR('/api/products', fetcher);
   const products: Product[] = data?.products ?? [];
+  const { getDescription } = useSiteContent();
 
   const product = products.find((p) => p.id === productId);
 
@@ -246,7 +248,7 @@ export default function ProductDetailPage() {
               {/* Handmade Notice */}
               <div className="pt-6 border-t border-gray-200 bg-gray-50 p-4">
                 <p className="text-sm text-gray-600 leading-relaxed">
-                  Cada pieza está torneada a mano en el torno; por lo tanto, cada pieza es única y puede presentar ligeras variaciones en forma, tamaño o color.
+                  {getDescription('product-notice', 'Cada pieza está torneada a mano en el torno; por lo tanto, cada pieza es única y puede presentar ligeras variaciones en forma, tamaño o color.')}
                 </p>
               </div>
             </div>

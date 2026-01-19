@@ -25,6 +25,12 @@ export function useSiteContent() {
     return trimmed === '' || trimmed === '-' || trimmed === '—';
   };
 
+  // Format field indicator for placeholder content
+  const fieldIndicator = (key: string, field: string, fallback?: string): string => {
+    const indicator = `[${key}:${field}]`;
+    return fallback ? `${indicator} ${fallback}` : indicator;
+  };
+
   // Helper to get image URL by key, with optional fallback
   const getImage = (key: string, fallback?: string): string => {
     const value = content[key]?.image;
@@ -40,13 +46,19 @@ export function useSiteContent() {
   // Helper to get title
   const getTitle = (key: string, fallback?: string): string => {
     const value = content[key]?.title;
-    return isEmpty(value) ? (fallback || '') : value!;
+    if (isEmpty(value)) {
+      return fieldIndicator(key, 'title', fallback);
+    }
+    return value!;
   };
 
   // Helper to get description
   const getDescription = (key: string, fallback?: string): string => {
     const value = content[key]?.description;
-    return isEmpty(value) ? (fallback || '') : value!;
+    if (isEmpty(value)) {
+      return fieldIndicator(key, 'description', fallback);
+    }
+    return value!;
   };
 
   // Get full content object

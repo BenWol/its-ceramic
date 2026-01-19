@@ -2,6 +2,17 @@
 
 import { useSiteContent } from '../hooks/useSiteImages';
 
+// Helper to render text with **bold** markdown support
+function renderWithBold(text: string) {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return <strong key={i}>{part.slice(2, -2)}</strong>;
+    }
+    return part;
+  });
+}
+
 export default function SobreMiPage() {
   const { getImage, getAlt, getDescription } = useSiteContent();
 
@@ -12,8 +23,10 @@ export default function SobreMiPage() {
 
   // Text content with fallbacks
   const aboutIntro = getDescription('about-intro', 'Soy ceramista artesanal con base en Barcelona. Cada una de mis piezas está torneada y esmaltada completamente a mano, siguiendo técnicas tradicionales.');
+  const aboutIntro2 = getDescription('about-intro-2', '');
   const aboutWork = getDescription('about-work', 'Mi trabajo se centra en crear piezas únicas que combinan funcionalidad y belleza. Trabajo principalmente con gres, un material noble que permite acabados variados y duraderos.');
   const aboutPhilosophy = getDescription('about-philosophy', 'Creo en la producción limitada y en el valor de lo hecho a mano. Cada pieza que sale de mi taller lleva consigo horas de trabajo, cuidado y dedicación.');
+  const aboutBullets = getDescription('about-bullets', 'Torneadas a mano\nEsmaltadas a mano\nProducción limitada\nEncargos personalizados\nEnvíos a toda Europa');
   const studioDescription = getDescription('about-studio', 'Mi taller está ubicado en Barcelona, donde trabajo cada día creando nuevas piezas y desarrollando mis colecciones.');
 
   return (
@@ -30,7 +43,7 @@ export default function SobreMiPage() {
       {/* Content */}
       <section className="py-16 px-6">
         <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
             {/* Image */}
             <div className="aspect-[3/4] bg-gray-100 border border-gray-200 overflow-hidden">
               {artistImage ? (
@@ -40,7 +53,8 @@ export default function SobreMiPage() {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center">
+                <div className="w-full h-full flex items-center justify-center flex-col gap-2">
+                  <span className="text-gray-400 text-xs font-mono">[about-artist:image]</span>
                   <span className="text-gray-400 text-sm">Foto del artista</span>
                 </div>
               )}
@@ -48,25 +62,32 @@ export default function SobreMiPage() {
 
             {/* Text */}
             <div className="space-y-6">
-              <p className="text-lg text-gray-600 leading-relaxed">
-                {aboutIntro}
+              <p className="text-gray-600 leading-relaxed">
+                {renderWithBold(aboutIntro)}
+              </p>
+
+              {aboutIntro2 && !aboutIntro2.startsWith('[') && (
+                <p className="text-gray-600 leading-relaxed">
+                  {renderWithBold(aboutIntro2)}
+                </p>
+              )}
+
+              <p className="text-gray-600 leading-relaxed">
+                {renderWithBold(aboutWork)}
               </p>
 
               <p className="text-gray-600 leading-relaxed">
-                {aboutWork}
-              </p>
-
-              <p className="text-gray-600 leading-relaxed">
-                {aboutPhilosophy}
+                {renderWithBold(aboutPhilosophy)}
               </p>
 
               <div className="pt-6 border-t border-gray-200">
                 <p className="text-sm text-gray-500 leading-relaxed">
-                  • Torneadas a mano<br />
-                  • Esmaltadas a mano<br />
-                  • Producción limitada<br />
-                  • Encargos personalizados<br />
-                  • Envíos a toda Europa
+                  {aboutBullets.split('\n').map((line, i) => (
+                    <span key={i}>
+                      • {line}
+                      {i < aboutBullets.split('\n').length - 1 && <br />}
+                    </span>
+                  ))}
                 </p>
               </div>
             </div>
@@ -99,7 +120,8 @@ export default function SobreMiPage() {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center">
+                  <div className="w-full h-full flex items-center justify-center flex-col gap-1">
+                    <span className="text-gray-400 text-xs font-mono">[{item.key}:image]</span>
                     <span className="text-gray-400 text-xs">{item.fallback}</span>
                   </div>
                 )}

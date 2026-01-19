@@ -7,23 +7,26 @@ import Link from 'next/link';
 
 const fetcher = (url: string) => fetch(url).then(res => res.json());
 
-const collectionInfo: Record<string, { name: string; description: string; airtableValue: string }> = {
+const collectionInfo: Record<string, { name: string; description: string; slug: string }> = {
   circus: {
     name: 'Colección Circus',
     description: 'Jarrones de cerámica artesanal de formas redondeadas y estética expresiva. Piezas con un espíritu lúdico y contemporáneo, concebidas como objetos decorativos con identidad propia.',
-    airtableValue: 'Circus',
+    slug: 'circus',
   },
   marmol: {
     name: 'Colección Mármol',
     description: 'Jarrones de cerámica artesanal inspirados en las vetas y contrastes del mármol. Piezas únicas de carácter decorativo, donde el color y la superficie adquieren protagonismo.',
-    airtableValue: 'Mármol',
+    slug: 'marmol',
   },
   materia: {
     name: 'Colección Materia',
     description: 'Cerámica artesanal de mesa en tonos tierra, pensada para el uso cotidiano. Piezas funcionales de formas orgánicas que acompañan la mesa del día a día.',
-    airtableValue: 'Materia',
+    slug: 'materia',
   },
 };
+
+// Normalize string for comparison (remove accents, lowercase)
+const normalize = (str: string) => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
 export default function CollectionPage() {
   const params = useParams();
@@ -34,9 +37,9 @@ export default function CollectionPage() {
 
   const info = collectionInfo[slug];
 
-  // Filter products by collection (match Airtable collection value)
+  // Filter products by collection (normalize to handle accent variations)
   const collectionProducts = products.filter((p) => {
-    return p.collection === info?.airtableValue;
+    return info && p.collection && normalize(p.collection) === info.slug;
   });
 
   if (!info) {
