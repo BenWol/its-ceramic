@@ -1,11 +1,9 @@
-'use client';
-
-import { useParams } from 'next/navigation';
-import useSWR from 'swr';
-import ProductCard, { Product } from '../../components/ProductCard';
+import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import { getProducts } from '../../../lib/airtable';
+import ProductCard from '../../components/ProductCard';
 
-const fetcher = (url: string) => fetch(url).then(res => res.json());
+export const revalidate = 60;
 
 const collectionInfo: Record<string, { name: string; description: string; slug: string }> = {
   circus: {
@@ -28,32 +26,21 @@ const collectionInfo: Record<string, { name: string; description: string; slug: 
 // Normalize string for comparison (remove accents, lowercase)
 const normalize = (str: string) => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
-export default function CollectionPage() {
-  const params = useParams();
-  const slug = params.slug as string;
-
-  const { data, isLoading } = useSWR('/api/products', fetcher);
-  const products: Product[] = data?.products ?? [];
+export default async function CollectionPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
 
   const info = collectionInfo[slug];
 
+  if (!info) {
+    notFound();
+  }
+
+  const products = await getProducts();
+
   // Filter products by collection (normalize to handle accent variations)
   const collectionProducts = products.filter((p) => {
-    return info && p.collection && normalize(p.collection) === info.slug;
+    return p.collection && normalize(p.collection) === info.slug;
   });
-
-  if (!info) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-semibold text-gray-900 mb-4">Colección no encontrada</h1>
-          <Link href="/colecciones" className="text-gray-600 hover:text-gray-900">
-            ← Volver a colecciones
-          </Link>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="bg-white">
@@ -75,9 +62,7 @@ export default function CollectionPage() {
       {/* Products */}
       <section className="py-16 px-6">
         <div className="max-w-7xl mx-auto">
-          {isLoading ? (
-            <p className="text-gray-500 text-center">Cargando piezas...</p>
-          ) : collectionProducts.length === 0 ? (
+          {collectionProducts.length === 0 ? (
             <p className="text-gray-500 text-center">No hay piezas en esta colección todavía.</p>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">

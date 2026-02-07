@@ -1,12 +1,10 @@
-'use client';
-
 import Link from 'next/link';
-import useSWR from 'swr';
-import ProductCard, { Product } from './components/ProductCard';
+import Image from 'next/image';
+import ProductCard from './components/ProductCard';
 import InstagramEmbed from './components/InstagramEmbed';
-import { useSiteContent } from './hooks/useSiteImages';
+import { getProducts, getSiteContent, createSiteContentHelpers } from '../lib/airtable';
 
-const fetcher = (url: string) => fetch(url).then(res => res.json());
+export const revalidate = 60;
 
 const collections = [
   {
@@ -29,10 +27,13 @@ const collections = [
   },
 ];
 
-export default function HomePage() {
-  const { data } = useSWR('/api/products', fetcher);
-  const products: Product[] = data?.products ?? [];
-  const { getImage, getAlt, getTitle, getDescription } = useSiteContent();
+export default async function HomePage() {
+  const [products, siteContent] = await Promise.all([
+    getProducts(),
+    getSiteContent(),
+  ]);
+
+  const { getImage, getAlt, getTitle, getDescription } = createSiteContentHelpers(siteContent);
 
   // Featured products (first 4)
   const featuredProducts = products.slice(0, 4);
@@ -52,10 +53,13 @@ export default function HomePage() {
       <section className="relative h-[70vh] min-h-[500px] flex items-center justify-center bg-gray-100 border-b border-gray-200">
         {/* Hero image */}
         {heroImage ? (
-          <img
+          <Image
             src={heroImage}
             alt={getAlt('hero', 'Cerámica artesanal')}
-            className="absolute inset-0 w-full h-full object-cover"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center flex-col gap-2">
@@ -108,12 +112,14 @@ export default function HomePage() {
                   href={`/colecciones/${collection.slug}`}
                   className="group"
                 >
-                  <div className="aspect-[4/3] bg-gray-100 border border-gray-200 mb-4 overflow-hidden">
+                  <div className="relative aspect-[4/3] bg-gray-100 border border-gray-200 mb-4 overflow-hidden">
                     {imageUrl ? (
-                      <img
+                      <Image
                         src={imageUrl}
                         alt={title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        fill
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center flex-col gap-1">
@@ -168,12 +174,14 @@ export default function HomePage() {
         <div className="max-w-4xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Image */}
-            <div className="aspect-square bg-gray-100 border border-gray-200 overflow-hidden order-2 lg:order-1">
+            <div className="relative aspect-square bg-gray-100 border border-gray-200 overflow-hidden order-2 lg:order-1">
               {aboutImage ? (
-                <img
+                <Image
                   src={aboutImage}
                   alt={getAlt('about-home', 'Sobre mí')}
-                  className="w-full h-full object-cover"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover"
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center flex-col gap-1">

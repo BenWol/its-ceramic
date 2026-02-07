@@ -1,7 +1,8 @@
-'use client';
-
 import Link from 'next/link';
-import { useSiteContent } from '../hooks/useSiteImages';
+import Image from 'next/image';
+import { getSiteContent, createSiteContentHelpers } from '../../lib/airtable';
+
+export const revalidate = 60;
 
 const collections = [
   {
@@ -24,8 +25,9 @@ const collections = [
   },
 ];
 
-export default function ColeccionesPage() {
-  const { getImage, getTitle, getDescription, getAlt } = useSiteContent();
+export default async function ColeccionesPage() {
+  const siteContent = await getSiteContent();
+  const { getImage, getTitle, getDescription, getAlt } = createSiteContentHelpers(siteContent);
 
   return (
     <div className="bg-white">
@@ -59,12 +61,14 @@ export default function ColeccionesPage() {
               >
                 {/* Image */}
                 <div className={`${index % 2 === 1 ? 'lg:order-2' : ''}`}>
-                  <div className="aspect-[4/3] bg-gray-100 border border-gray-200 overflow-hidden">
+                  <div className="relative aspect-[4/3] bg-gray-100 border border-gray-200 overflow-hidden">
                     {imageUrl ? (
-                      <img
+                      <Image
                         src={imageUrl}
                         alt={alt}
-                        className="w-full h-full object-cover"
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 50vw"
+                        className="object-cover"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center flex-col gap-1">

@@ -1,6 +1,7 @@
-'use client';
+import Image from 'next/image';
+import { getSiteContent, createSiteContentHelpers } from '../../lib/airtable';
 
-import { useSiteContent } from '../hooks/useSiteImages';
+export const revalidate = 60;
 
 // Helper to render text with **bold** markdown support
 function renderWithBold(text: string) {
@@ -13,8 +14,9 @@ function renderWithBold(text: string) {
   });
 }
 
-export default function SobreMiPage() {
-  const { getImage, getAlt, getDescription } = useSiteContent();
+export default async function SobreMiPage() {
+  const siteContent = await getSiteContent();
+  const { getImage, getAlt, getDescription } = createSiteContentHelpers(siteContent);
 
   const artistImage = getImage('about-artist');
   const studioImage1 = getImage('about-studio-1');
@@ -45,12 +47,14 @@ export default function SobreMiPage() {
         <div className="max-w-4xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
             {/* Image */}
-            <div className="aspect-[3/4] bg-gray-100 border border-gray-200 overflow-hidden">
+            <div className="relative aspect-[3/4] bg-gray-100 border border-gray-200 overflow-hidden">
               {artistImage ? (
-                <img
+                <Image
                   src={artistImage}
                   alt={getAlt('about-artist', 'La artista')}
-                  className="w-full h-full object-cover"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover"
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center flex-col gap-2">
@@ -112,12 +116,14 @@ export default function SobreMiPage() {
               { image: studioImage2, key: 'about-studio-2', fallback: 'Foto taller 2' },
               { image: studioImage3, key: 'about-studio-3', fallback: 'Foto taller 3' },
             ].map((item, idx) => (
-              <div key={idx} className="aspect-square bg-gray-200 border border-gray-300 overflow-hidden">
+              <div key={idx} className="relative aspect-square bg-gray-200 border border-gray-300 overflow-hidden">
                 {item.image ? (
-                  <img
+                  <Image
                     src={item.image}
                     alt={getAlt(item.key, item.fallback)}
-                    className="w-full h-full object-cover"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center flex-col gap-1">

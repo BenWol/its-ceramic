@@ -1,20 +1,6 @@
 import Link from 'next/link';
-
-export type Product = {
-  id: string;
-  name: string;
-  category: string;
-  collection?: string;
-  material: string;
-  technique: string;
-  dimensions: string;
-  price: number;
-  description?: string;
-  images?: string[];
-  image?: string;
-  active?: boolean;
-  stock?: 'available' | 'sold';
-};
+import Image from 'next/image';
+import type { Product } from '../../lib/airtable';
 
 type ProductCardProps = {
   product: Product;
@@ -36,13 +22,15 @@ export default function ProductCard({ product, showCollection = false }: Product
         )}
 
         {product.images && product.images.length > 0 ? (
-          <img
+          <Image
             src={product.images[0]}
             alt={product.name}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
         ) : (
-          <span className="text-6xl opacity-20">{product.image || '🏺'}</span>
+          <span className="text-6xl opacity-20">🏺</span>
         )}
       </div>
 

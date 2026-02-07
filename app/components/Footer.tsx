@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Mail, Instagram } from 'lucide-react';
 
 export default function Footer() {
@@ -9,7 +10,7 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <Link href="/">
-              <img src="/logo.jpg" alt="its ceramic" className="h-12 w-auto mb-4" />
+              <Image src="/logo.jpg" alt="its ceramic" width={48} height={48} className="h-12 w-auto mb-4" />
             </Link>
             <p className="text-sm text-gray-600">
               Cerámica artesanal hecha a mano en Barcelona.

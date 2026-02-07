@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
@@ -22,7 +23,7 @@ export default function Header() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex-shrink-0">
-            <img src="/logo.jpg" alt="its ceramic" className="h-28 w-auto" />
+            <Image src="/logo.jpg" alt="its ceramic" width={112} height={112} priority className="h-28 w-auto" />
           </Link>
 
           {/* Desktop Navigation */}
