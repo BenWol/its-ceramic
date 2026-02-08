@@ -23,7 +23,7 @@ export default function Header() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex-shrink-0">
-            <Image src="/logo.jpg" alt="its ceramic" width={112} height={112} priority className="h-28 w-auto" />
+            <Image src="/logo.png" alt="its ceramic" width={112} height={112} priority className="h-28 w-auto" />
           </Link>
 
           {/* Desktop Navigation */}

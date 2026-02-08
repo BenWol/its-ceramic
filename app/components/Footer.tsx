@@ -10,7 +10,7 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <Link href="/">
-              <Image src="/logo.jpg" alt="its ceramic" width={48} height={48} className="h-12 w-auto mb-4" />
+              <Image src="/logo.png" alt="its ceramic" width={48} height={48} className="h-12 w-auto mb-4" />
             </Link>
             <p className="text-sm text-gray-600">
               Cerámica artesanal hecha a mano en Barcelona.
