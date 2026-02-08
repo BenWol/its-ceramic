@@ -3,7 +3,7 @@ import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const CREATOR_EMAIL = 'itsasoarana@gmail.com';
+const CREATOR_EMAIL = 'contact@its-ceramic.com';
 
 export async function POST(req: Request) {
   try {
@@ -20,7 +20,7 @@ export async function POST(req: Request) {
 
     // Email to the creator
     await resend.emails.send({
-      from: 'its ceramic <onboarding@resend.dev>',
+      from: 'its ceramic <contact@its-ceramic.com>',
       to: CREATOR_EMAIL,
       replyTo: email,
       subject: subject || `Nueva consulta: ${contactTypeLabel}`,
@@ -39,7 +39,7 @@ Puedes responder directamente a este email para contactar con ${email}`,
 
     // Confirmation email to the customer
     await resend.emails.send({
-      from: 'its ceramic <onboarding@resend.dev>',
+      from: 'its ceramic <contact@its-ceramic.com>',
       to: email,
       subject: 'Hemos recibido tu mensaje - its ceramic',
       text: `¡Hola!
@@ -54,7 +54,7 @@ ${productName ? `Pieza de interés: ${productName}` : ''}
 ---
 its ceramic
 Instagram: @its___arana
-Email: ${CREATOR_EMAIL}`,
+Email: contact@its-ceramic.com`,
     });
 
     return NextResponse.json({ success: true });

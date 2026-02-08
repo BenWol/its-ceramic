@@ -97,7 +97,7 @@ export default function ContactModal({
         setIsSuccess(false);
       }, 2000);
     } catch (err) {
-      setError('No se pudo enviar el mensaje. Por favor, intenta de nuevo o escríbeme directamente a itsasoarana@gmail.com');
+      setError('No se pudo enviar el mensaje. Por favor, intenta de nuevo o escríbeme directamente a contact@its-ceramic.com');
     } finally {
       setIsSubmitting(false);
     }
@@ -211,8 +211,8 @@ export default function ContactModal({
 
             <p className="text-xs text-gray-500 text-center">
               También puedes escribirme directamente a{' '}
-              <a href="mailto:itsasoarana@gmail.com" className="underline">
-                itsasoarana@gmail.com
+              <a href="mailto:contact@its-ceramic.com" className="underline">
+                contact@its-ceramic.com
               </a>
             </p>
           </form>

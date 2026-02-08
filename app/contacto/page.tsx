@@ -39,7 +39,7 @@ export default function ContactoPage() {
       setEmail('');
       setMessage('');
     } catch {
-      setError('No se pudo enviar el mensaje. Puedes escribirme directamente a itsasoarana@gmail.com');
+      setError('No se pudo enviar el mensaje. Puedes escribirme directamente a contact@its-ceramic.com');
     } finally {
       setIsSubmitting(false);
     }
@@ -68,7 +68,7 @@ export default function ContactoPage() {
               <div className="text-center mb-6">
                 <Mail size={32} className="mx-auto mb-4 text-gray-600" />
                 <h3 className="text-lg font-medium text-gray-900 mb-1">Email</h3>
-                <p className="text-sm text-gray-500">itsasoarana@gmail.com</p>
+                <p className="text-sm text-gray-500">contact@its-ceramic.com</p>
               </div>
 
               {isSuccess ? (

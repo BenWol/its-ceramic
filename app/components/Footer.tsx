@@ -41,11 +41,11 @@ export default function Footer() {
             <h4 className="text-sm font-semibold text-gray-900 mb-4">Contacto</h4>
             <div className="flex flex-col space-y-3">
               <a
-                href="mailto:itsasoarana@gmail.com"
+                href="mailto:contact@its-ceramic.com"
                 className="flex items-center text-sm text-gray-600 hover:text-gray-900"
               >
                 <Mail size={16} className="mr-2" />
-                itsasoarana@gmail.com
+                contact@its-ceramic.com
               </a>
               <a
                 href="https://instagram.com/its___arana"
