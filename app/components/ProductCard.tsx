@@ -17,13 +17,13 @@ export default function ProductCard({ product, showCollection = false }: Product
         {/* Sold out badge */}
         {isSoldOut && (
           <div className="absolute top-3 left-3 z-10 bg-gray-600 text-white text-xs font-medium py-1 px-3">
-            Agotado
+            Por encargo
           </div>
         )}
 
-        {product.images && product.images.length > 0 ? (
+        {product.thumbnails && product.thumbnails.length > 0 ? (
           <Image
-            src={product.images[0]}
+            src={product.thumbnails[0]}
             alt={product.name}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"

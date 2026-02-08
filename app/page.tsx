@@ -48,7 +48,7 @@ export default async function HomePage() {
   const aboutDescription = getDescription('about-home', 'Cada pieza está torneada y esmaltada completamente a mano, siguiendo técnicas tradicionales. Creo en la producción limitada y en el valor de lo hecho a mano.');
 
   return (
-    <div className="bg-white">
+    <div className="bg-warm-white">
       {/* Hero */}
       <section className="relative h-[70vh] min-h-[500px] flex items-center justify-center bg-gray-100 border-b border-gray-200">
         {/* Hero image */}
@@ -69,7 +69,7 @@ export default async function HomePage() {
         )}
 
         {/* Overlay for text readability */}
-        {heroImage && <div className="absolute inset-0 bg-white/40" />}
+        {heroImage && <div className="absolute inset-0 bg-warm-white/40" />}
 
         {/* Overlay content */}
         <div className="relative z-10 text-center px-6">
@@ -143,7 +143,7 @@ export default async function HomePage() {
 
       {/* Featured Products */}
       {featuredProducts.length > 0 && (
-        <section className="py-20 px-6 bg-gray-50 border-t border-gray-200">
+        <section className="py-20 px-6 bg-warm-gray border-t border-gray-200">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-semibold text-gray-900 mb-4">
@@ -211,7 +211,7 @@ export default async function HomePage() {
       </section>
 
       {/* Instagram Section */}
-      <section className="py-20 px-6 bg-gray-50 border-t border-gray-200">
+      <section className="py-20 px-6 bg-warm-gray border-t border-gray-200">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl font-semibold text-gray-900 mb-4">
             @its___arana

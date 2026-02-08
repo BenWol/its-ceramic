@@ -4,7 +4,7 @@ import { Mail, Instagram } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="border-t border-gray-200 bg-white">
+    <footer className="border-t border-gray-200 bg-warm-white">
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Brand */}
@@ -60,8 +60,11 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Copyright */}
-        <div className="border-t border-gray-200 mt-8 pt-8 text-center">
+        {/* Disclaimer & Copyright */}
+        <div className="border-t border-gray-200 mt-8 pt-8 text-center space-y-3">
+          <p className="text-xs text-gray-400 max-w-2xl mx-auto leading-relaxed">
+            Esta web funciona como catálogo personal y portfolio artístico. Los importes indicados representan la valoración de cada pieza única. Para consultar disponibilidad o realizar una adquisición, el contacto se realiza exclusivamente de forma directa.
+          </p>
           <p className="text-xs text-gray-500">
             © {new Date().getFullYear()} its ceramic Barcelona. Todos los derechos reservados.
           </p>

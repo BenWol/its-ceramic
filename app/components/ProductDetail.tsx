@@ -25,7 +25,8 @@ export default function ProductDetail({ product, relatedProducts, productNotice 
   };
 
   const isSoldOut = product.stock === 'sold';
-  const images = product.images && product.images.length > 0 ? product.images : [];
+  const thumbnails = product.thumbnails && product.thumbnails.length > 0 ? product.thumbnails : [];
+  const images = thumbnails.length > 0 ? thumbnails : (product.images || []);
   const hasMultipleImages = images.length > 1;
 
   const nextImage = () => {
@@ -37,7 +38,7 @@ export default function ProductDetail({ product, relatedProducts, productNotice 
   };
 
   return (
-    <div className="bg-white">
+    <div className="bg-warm-white">
       {/* Breadcrumb */}
       <div className="max-w-7xl mx-auto px-6 py-4">
         <Link href="/piezas" className="text-sm text-gray-500 hover:text-gray-900">
@@ -107,7 +108,7 @@ export default function ProductDetail({ product, relatedProducts, productNotice 
                         idx === currentImageIndex ? 'border-gray-900' : 'border-gray-200'
                       }`}
                     >
-                      <Image src={img} alt="" fill sizes="80px" className="object-cover" />
+                      <Image src={product.thumbnails?.[idx] || img} alt="" fill sizes="80px" className="object-cover" />
                     </button>
                   ))}
                 </div>
@@ -151,7 +152,7 @@ export default function ProductDetail({ product, relatedProducts, productNotice 
                   /* Sold out - show encargo option */
                   <>
                     <div className="space-y-1">
-                      <p className="text-gray-500 font-medium">Agotado</p>
+                      <p className="text-gray-500 font-medium">Por encargo</p>
                       <p className="text-sm text-gray-600">Disponible bajo encargo</p>
                     </div>
 
@@ -218,7 +219,7 @@ export default function ProductDetail({ product, relatedProducts, productNotice 
               )}
 
               {/* Handmade Notice */}
-              <div className="pt-6 border-t border-gray-200 bg-gray-50 p-4">
+              <div className="pt-6 border-t border-gray-200 bg-warm-gray p-4">
                 <p className="text-sm text-gray-600 leading-relaxed">
                   {productNotice}
                 </p>
@@ -230,7 +231,7 @@ export default function ProductDetail({ product, relatedProducts, productNotice 
 
       {/* Related Products */}
       {relatedProducts.length > 0 && (
-        <section className="py-16 px-6 border-t border-gray-200 bg-gray-50">
+        <section className="py-16 px-6 border-t border-gray-200 bg-warm-gray">
           <div className="max-w-7xl mx-auto">
             <h2 className="text-2xl font-semibold text-gray-900 mb-8 text-center">
               También te puede gustar

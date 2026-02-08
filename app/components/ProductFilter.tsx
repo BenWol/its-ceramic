@@ -23,7 +23,7 @@ export default function ProductFilter({ products }: { products: Product[] }) {
   return (
     <>
       {/* Filters */}
-      <section className="py-6 px-6 border-b border-gray-200 sticky top-[73px] bg-white z-40">
+      <section className="py-6 px-6 border-b border-gray-200 sticky top-[73px] bg-warm-white z-40">
         <div className="max-w-7xl mx-auto">
           <div className="flex gap-2 flex-wrap justify-center">
             {categories.map((cat) => (
@@ -32,7 +32,7 @@ export default function ProductFilter({ products }: { products: Product[] }) {
                 onClick={() => setSelectedCategory(cat.id)}
                 className={`text-sm font-medium transition-colors px-4 py-2 border ${
                   selectedCategory === cat.id
-                    ? 'border-gray-900 text-gray-900 bg-gray-50'
+                    ? 'border-gray-900 text-gray-900 bg-warm-gray'
                     : 'border-gray-200 text-gray-500 hover:text-gray-900 hover:border-gray-300'
                 }`}
               >

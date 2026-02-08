@@ -7,7 +7,7 @@ export default async function PiezasPage() {
   const products = await getProducts();
 
   return (
-    <div className="bg-white">
+    <div className="bg-warm-white">
       {/* Hero */}
       <section className="py-16 px-6 border-b border-gray-200">
         <div className="max-w-4xl mx-auto text-center">
@@ -15,7 +15,7 @@ export default async function PiezasPage() {
             Piezas
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Todas las piezas disponibles. Cada una torneada y esmaltada completamente a mano.
+            Objetos de cerámica hechos a mano en pequeñas series, pensados para el uso cotidiano.
           </p>
         </div>
       </section>

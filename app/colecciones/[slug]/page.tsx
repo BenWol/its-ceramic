@@ -43,7 +43,7 @@ export default async function CollectionPage({ params }: { params: Promise<{ slu
   });
 
   return (
-    <div className="bg-white">
+    <div className="bg-warm-white">
       {/* Hero */}
       <section className="py-16 px-6 border-b border-gray-200">
         <div className="max-w-4xl mx-auto">

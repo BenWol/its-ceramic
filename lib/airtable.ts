@@ -6,6 +6,11 @@ type AirtableRecord = {
   fields: Record<string, any>;
 };
 
+export type ProductImage = {
+  url: string;
+  thumbnail: string;
+};
+
 export type Product = {
   id: string;
   name: string;
@@ -17,6 +22,7 @@ export type Product = {
   description: string;
   price: number;
   images: string[];
+  thumbnails: string[];
   active: boolean;
   stock: 'available' | 'sold';
 };
@@ -85,9 +91,19 @@ export const getProducts = cache(async (): Promise<Product[]> => {
   const products: Product[] = records.map(r => {
     const f = r.fields || {};
     const attachments = f.Image || f.Images || [];
-    const images: string[] = Array.isArray(attachments)
-      ? attachments.map((a: any) => a.url).filter(Boolean)
-      : [];
+    const images: string[] = [];
+    const thumbnails: string[] = [];
+
+    if (Array.isArray(attachments)) {
+      for (const a of attachments) {
+        // Prefer Airtable's pre-compressed "full" thumbnail (up to 3072px, much smaller file size)
+        const fullUrl = a.thumbnails?.full?.url || a.url;
+        // Use "large" thumbnail (512px) for card/grid views
+        const thumbUrl = a.thumbnails?.large?.url || fullUrl;
+        if (fullUrl) images.push(fullUrl);
+        if (thumbUrl) thumbnails.push(thumbUrl);
+      }
+    }
 
     return {
       id: r.id,
@@ -100,6 +116,7 @@ export const getProducts = cache(async (): Promise<Product[]> => {
       description: f.Description || '',
       price: Number(f.Price ?? 0),
       images,
+      thumbnails,
       active: !!f.Active,
       stock: f.Stock === 'sold' ? 'sold' : 'available',
     };
@@ -121,8 +138,9 @@ export const getSiteContent = cache(async (): Promise<Record<string, SiteContent
     if (!key) return;
 
     const attachments = f.Image || f.Images || [];
-    const imageUrl = Array.isArray(attachments) && attachments.length > 0
-      ? attachments[0].url
+    const firstAttachment = Array.isArray(attachments) && attachments.length > 0 ? attachments[0] : null;
+    const imageUrl = firstAttachment
+      ? (firstAttachment.thumbnails?.full?.url || firstAttachment.url || '')
       : '';
 
     contentMap[key] = {
