@@ -149,29 +149,29 @@ export default function ProductDetail({ product, relatedProducts, productNotice 
               {/* Stock Status & CTA */}
               <div className="space-y-4 pt-4 border-t border-gray-200">
                 {isSoldOut ? (
-                  /* Sold out - show encargo option */
+                  /* Bajo petición - proceso artesanal */
                   <>
                     <div className="space-y-1">
-                      <p className="text-gray-500 font-medium">Por encargo</p>
-                      <p className="text-sm text-gray-600">Disponible bajo encargo</p>
+                      <p className="text-gray-500 font-medium">Bajo petición</p>
+                      <p className="text-sm text-gray-600">Esta pieza requiere un proceso artesanal de entre 15 y 20 días.</p>
                     </div>
 
                     <button
                       onClick={() => openModal('encargo')}
                       className="w-full bg-gray-800 text-white text-center py-4 px-6 font-medium hover:bg-gray-900 transition-colors"
                     >
-                      Encargar esta pieza
+                      Me interesa esta pieza
                     </button>
 
                     <p className="text-sm text-gray-500 text-center">
-                      Tiempo de producción estimado: 15-20 días laborables.
+                      Escríbeme y te cuento todos los detalles.
                     </p>
                   </>
                 ) : (
-                  /* Available - show interest option */
+                  /* Disponible - envío inmediato */
                   <>
                     <div className="space-y-1">
-                      <p className="text-green-700 font-medium">Disponible</p>
+                      <p className="text-green-700 font-medium">Disponible para envío inmediato</p>
                     </div>
 
                     <button

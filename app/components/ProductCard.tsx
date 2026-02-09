@@ -17,7 +17,7 @@ export default function ProductCard({ product, showCollection = false }: Product
         {/* Sold out badge */}
         {isSoldOut && (
           <div className="absolute top-3 left-3 z-10 bg-gray-600 text-white text-xs font-medium py-1 px-3">
-            Por encargo
+            Bajo petición
           </div>
         )}
 
@@ -46,7 +46,7 @@ export default function ProductCard({ product, showCollection = false }: Product
           </p>
         )}
 
-        <p className="text-sm text-gray-600">
+        <p className="text-xs text-gray-400">
           {new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(product.price)}
         </p>
       </div>

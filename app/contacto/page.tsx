@@ -54,7 +54,7 @@ export default function ContactoPage() {
             ¿Hablamos?
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Si quieres consultar disponibilidad, encargar una pieza o proponer una colaboración, escríbeme por email o Instagram. Estaré encantada de atenderte.
+            Si quieres consultar más detalles sobre mi obra, proponer una colaboración o estás interesado en alguna de las piezas del catálogo, escríbeme por email o Instagram. Estaré encantada de atenderte de forma personalizada.
           </p>
         </div>
       </section>

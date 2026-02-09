@@ -63,7 +63,7 @@ export default function Footer() {
         {/* Disclaimer & Copyright */}
         <div className="border-t border-gray-200 mt-8 pt-8 text-center space-y-3">
           <p className="text-xs text-gray-400 max-w-2xl mx-auto leading-relaxed">
-            Esta web funciona como catálogo personal y portfolio artístico. Los importes indicados representan la valoración de cada pieza única. Para consultar disponibilidad o realizar una adquisición, el contacto se realiza exclusivamente de forma directa.
+            Nota informativa: Este sitio web es un archivo artístico y catálogo personal de Its ceramic. Los valores indicados en las piezas corresponden a su tasación artística. La web no dispone de pasarela de pago ni realiza transacciones comerciales automáticas. Para consultas sobre la obra, exposiciones o disponibilidad de piezas, por favor contacte directamente con la autora.
           </p>
           <p className="text-xs text-gray-500">
             © {new Date().getFullYear()} its ceramic Barcelona. Todos los derechos reservados.
