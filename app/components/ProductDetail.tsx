@@ -142,7 +142,7 @@ export default function ProductDetail({ product, relatedProducts, productNotice 
               </div>
 
               {/* Price */}
-              <p className="text-2xl font-semibold text-gray-900">
+              <p className="text-lg text-gray-400">
                 {new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(product.price)}
               </p>
 

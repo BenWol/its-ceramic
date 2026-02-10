@@ -46,9 +46,6 @@ export default function ProductCard({ product, showCollection = false }: Product
           </p>
         )}
 
-        <p className="text-xs text-gray-400">
-          {new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(product.price)}
-        </p>
       </div>
     </Link>
   );
