@@ -128,7 +128,12 @@ export const getProducts = cache(async (): Promise<Product[]> => {
   }
 
   console.warn('Blob cache miss for products — falling back to Airtable');
-  return fetchProductsFromAirtable();
+  try {
+    return await fetchProductsFromAirtable();
+  } catch (err) {
+    console.error('Failed to fetch products from both Blob and Airtable:', err);
+    return [];
+  }
 });
 
 // Site Content — reads from Vercel Blob cache, falls back to Airtable
@@ -145,7 +150,12 @@ export const getSiteContent = cache(async (): Promise<Record<string, SiteContent
   }
 
   console.warn('Blob cache miss for site content — falling back to Airtable');
-  return fetchSiteContentFromAirtable();
+  try {
+    return await fetchSiteContentFromAirtable();
+  } catch (err) {
+    console.error('Failed to fetch site content from both Blob and Airtable:', err);
+    return {};
+  }
 });
 
 // Site content helpers (same logic as the useSiteContent hook, but for server components)
