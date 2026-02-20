@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { getProducts, getSiteContent, createSiteContentHelpers } from '../../../lib/airtable';
 import ProductDetail from '../../components/ProductDetail';
 
-export const revalidate = 60;
+export const revalidate = false;
 
 export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

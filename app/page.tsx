@@ -4,7 +4,7 @@ import ProductCard from './components/ProductCard';
 import InstagramEmbed from './components/InstagramEmbed';
 import { getProducts, getSiteContent, createSiteContentHelpers } from '../lib/airtable';
 
-export const revalidate = 60;
+export const revalidate = false;
 
 const collections = [
   {

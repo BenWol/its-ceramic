@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { getSiteContent, createSiteContentHelpers } from '../../lib/airtable';
 
-export const revalidate = 60;
+export const revalidate = false;
 
 const collections = [
   {

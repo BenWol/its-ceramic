@@ -1,7 +1,7 @@
 import { getProducts } from '../../lib/airtable';
 import ProductFilter from '../components/ProductFilter';
 
-export const revalidate = 60;
+export const revalidate = false;
 
 export default async function PiezasPage() {
   const products = await getProducts();

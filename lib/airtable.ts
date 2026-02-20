@@ -1,11 +1,7 @@
 import { cache } from 'react';
+import { list } from '@vercel/blob';
 
 // Types
-type AirtableRecord = {
-  id: string;
-  fields: Record<string, any>;
-};
-
 export type ProductImage = {
   url: string;
   thumbnail: string;
@@ -36,111 +32,73 @@ export type SiteContent = {
   description?: string;
 };
 
-// Airtable config
-function getConfig() {
-  const baseId = process.env.AIRTABLE_BASE_ID;
-  const apiKey = process.env.AIRTABLE_API_KEY;
-  if (!baseId || !apiKey) {
-    throw new Error('Missing Airtable configuration');
+// Find a blob's public URL by its path prefix
+async function findBlobUrl(prefix: string): Promise<string | null> {
+  try {
+    const { blobs } = await list({ prefix, limit: 1 });
+    return blobs[0]?.url || null;
+  } catch {
+    return null;
   }
-  return { baseId, apiKey };
 }
 
-// Fetch all records with pagination
-async function fetchAllRecords(tableName: string, sort?: { field: string; direction: string }) {
-  const { baseId, apiKey } = getConfig();
-  const records: AirtableRecord[] = [];
-  let offset: string | undefined = undefined;
-
-  do {
-    const params = new URLSearchParams();
-    params.set('pageSize', '100');
-    if (sort) {
-      params.set('sort[0][field]', sort.field);
-      params.set('sort[0][direction]', sort.direction);
-    }
-    if (offset) params.set('offset', offset);
-
-    const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}?${params.toString()}`;
-
-    const res = await fetch(url, {
-      headers: { Authorization: `Bearer ${apiKey}` },
-      next: { revalidate: 60 },
-    });
-
-    if (!res.ok) {
-      const text = await res.text();
-      throw new Error(`Airtable fetch failed: ${res.status} ${res.statusText} - ${text}`);
-    }
-
-    const json = await res.json();
-    if (Array.isArray(json.records)) {
-      records.push(...json.records);
-    }
-    offset = json.offset;
-  } while (offset);
-
-  return records;
-}
-
-// Products
-export const getProducts = cache(async (): Promise<Product[]> => {
+// Fallback: fetch directly from Airtable (used when Blob cache is not seeded yet)
+async function fetchProductsFromAirtable(): Promise<Product[]> {
+  const { fetchAllRecords } = await import('./airtable-fetch');
   const tableName = process.env.AIRTABLE_TABLE_NAME || 'Products';
   const records = await fetchAllRecords(tableName, { field: 'Order', direction: 'desc' });
 
-  const products: Product[] = records.map(r => {
-    const f = r.fields || {};
-    const attachments = f.Image || f.Images || [];
-    const images: string[] = [];
-    const thumbnails: string[] = [];
+  return records
+    .map(r => {
+      const f = r.fields || {};
+      const attachments = f.Image || f.Images || [];
+      const images: string[] = [];
+      const thumbnails: string[] = [];
 
-    if (Array.isArray(attachments)) {
-      for (const a of attachments) {
-        // Prefer Airtable's pre-compressed "full" thumbnail (up to 3072px, much smaller file size)
-        const fullUrl = a.thumbnails?.full?.url || a.url;
-        // Use "large" thumbnail (512px) for card/grid views
-        const thumbUrl = a.thumbnails?.large?.url || fullUrl;
-        if (fullUrl) images.push(fullUrl);
-        if (thumbUrl) thumbnails.push(thumbUrl);
+      if (Array.isArray(attachments)) {
+        for (const a of attachments) {
+          const fullUrl = a.thumbnails?.full?.url || a.url;
+          const thumbUrl = a.thumbnails?.large?.url || fullUrl;
+          if (fullUrl) images.push(fullUrl);
+          if (thumbUrl) thumbnails.push(thumbUrl);
+        }
       }
-    }
 
-    return {
-      id: r.id,
-      name: f.Name || '',
-      category: f.Category || '',
-      collection: f.Collection || '',
-      material: f.Material || '',
-      technique: f.Technique || '',
-      dimensions: f.Dimensions || '',
-      description: f.Description || '',
-      price: Number(f.Price ?? 0),
-      images,
-      thumbnails,
-      active: !!f.Active,
-      stock: f.Stock === 'sold' ? 'sold' : 'available',
-    };
-  });
+      return {
+        id: r.id,
+        name: f.Name || '',
+        category: f.Category || '',
+        collection: f.Collection || '',
+        material: f.Material || '',
+        technique: f.Technique || '',
+        dimensions: f.Dimensions || '',
+        description: f.Description || '',
+        price: Number(f.Price ?? 0),
+        images,
+        thumbnails,
+        active: !!f.Active,
+        stock: (f.Stock === 'sold' ? 'sold' : 'available') as 'available' | 'sold',
+      };
+    })
+    .filter(p => p.active);
+}
 
-  return products.filter(p => p.active);
-});
-
-// Site Content
-export const getSiteContent = cache(async (): Promise<Record<string, SiteContent>> => {
+async function fetchSiteContentFromAirtable(): Promise<Record<string, SiteContent>> {
+  const { fetchAllRecords } = await import('./airtable-fetch');
   const tableName = process.env.AIRTABLE_SITE_IMAGES_TABLE || 'Site Images';
   const records = await fetchAllRecords(tableName);
 
   const contentMap: Record<string, SiteContent> = {};
-
-  records.forEach((r) => {
+  records.forEach(r => {
     const f = r.fields || {};
     const key = f.Key || '';
     if (!key) return;
 
     const attachments = f.Image || f.Images || [];
-    const firstAttachment = Array.isArray(attachments) && attachments.length > 0 ? attachments[0] : null;
+    const firstAttachment =
+      Array.isArray(attachments) && attachments.length > 0 ? attachments[0] : null;
     const imageUrl = firstAttachment
-      ? (firstAttachment.thumbnails?.full?.url || firstAttachment.url || '')
+      ? firstAttachment.thumbnails?.full?.url || firstAttachment.url || ''
       : '';
 
     contentMap[key] = {
@@ -154,6 +112,40 @@ export const getSiteContent = cache(async (): Promise<Record<string, SiteContent
   });
 
   return contentMap;
+}
+
+// Products — reads from Vercel Blob cache, falls back to Airtable
+export const getProducts = cache(async (): Promise<Product[]> => {
+  const url = await findBlobUrl('cache/products.json');
+
+  if (url) {
+    try {
+      const res = await fetch(url, { next: { tags: ['products'] } });
+      if (res.ok) return res.json();
+    } catch {
+      // Blob not available, fall through to Airtable
+    }
+  }
+
+  console.warn('Blob cache miss for products — falling back to Airtable');
+  return fetchProductsFromAirtable();
+});
+
+// Site Content — reads from Vercel Blob cache, falls back to Airtable
+export const getSiteContent = cache(async (): Promise<Record<string, SiteContent>> => {
+  const url = await findBlobUrl('cache/site-content.json');
+
+  if (url) {
+    try {
+      const res = await fetch(url, { next: { tags: ['site-content'] } });
+      if (res.ok) return res.json();
+    } catch {
+      // Blob not available, fall through to Airtable
+    }
+  }
+
+  console.warn('Blob cache miss for site content — falling back to Airtable');
+  return fetchSiteContentFromAirtable();
 });
 
 // Site content helpers (same logic as the useSiteContent hook, but for server components)

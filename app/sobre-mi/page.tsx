@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { getSiteContent, createSiteContentHelpers } from '../../lib/airtable';
 
-export const revalidate = 60;
+export const revalidate = false;
 
 // Helper to render text with **bold** markdown support
 function renderWithBold(text: string) {

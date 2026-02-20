@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { getProducts } from '../../../lib/airtable';
 import ProductCard from '../../components/ProductCard';
 
-export const revalidate = 60;
+export const revalidate = false;
 
 const collectionInfo: Record<string, { name: string; description: string; slug: string }> = {
   circus: {
