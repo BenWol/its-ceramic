@@ -91,8 +91,9 @@ function renderResponse(
   const logHtml = log
     .map(line => {
       let color = '#cbd5e1';
-      if (line.startsWith('FAILED') || line.startsWith('ERROR')) color = '#ef4444';
-      else if (line.startsWith('Uploaded')) color = '#22c55e';
+      if (line.startsWith('FAILED') || line.startsWith('ERROR') || line.startsWith('-')) color = '#ef4444';
+      else if (line.startsWith('Uploaded') || line.startsWith('+')) color = '#22c55e';
+      else if (line.startsWith('~')) color = '#facc15';
       return `<div style="color:${color};padding:2px 0">${line}</div>`;
     })
     .join('\n');
@@ -127,6 +128,75 @@ function renderResponse(
   });
 }
 
+async function loadBlobJson<T>(prefix: string): Promise<T | null> {
+  try {
+    const { blobs } = await list({ prefix, limit: 1 });
+    if (blobs[0]) {
+      const res = await fetch(blobs[0].url, { cache: 'no-store' });
+      if (res.ok) return await res.json();
+    }
+  } catch { /* not found */ }
+  return null;
+}
+
+function diffProducts(oldList: Product[], newList: Product[], log: string[]) {
+  const oldMap = new Map(oldList.map(p => [p.id, p]));
+  const newMap = new Map(newList.map(p => [p.id, p]));
+
+  // Compare fields (excluding images/thumbnails which are managed separately)
+  const textFields = ['name', 'category', 'collection', 'material', 'technique', 'dimensions', 'description', 'price', 'stock'] as const;
+
+  for (const p of newList) {
+    const old = oldMap.get(p.id);
+    if (!old) {
+      log.push(`+ New product: "${p.name}"`);
+      continue;
+    }
+    const changes: string[] = [];
+    for (const f of textFields) {
+      if (String(old[f]) !== String(p[f])) {
+        changes.push(`${f}: "${old[f]}" → "${p[f]}"`);
+      }
+    }
+    if (changes.length > 0) {
+      log.push(`~ Updated "${p.name}": ${changes.join(', ')}`);
+    }
+  }
+
+  for (const old of oldList) {
+    if (!newMap.has(old.id)) {
+      log.push(`- Removed product: "${old.name}"`);
+    }
+  }
+}
+
+function diffSiteContent(oldMap: Record<string, SiteContent>, newMap: Record<string, SiteContent>, log: string[]) {
+  const textFields = ['alt', 'title', 'description'] as const;
+
+  for (const [key, entry] of Object.entries(newMap)) {
+    const old = oldMap[key];
+    if (!old) {
+      log.push(`+ New site content: "${key}"`);
+      continue;
+    }
+    const changes: string[] = [];
+    for (const f of textFields) {
+      if (String(old[f]) !== String(entry[f])) {
+        changes.push(`${f}: "${old[f]}" → "${entry[f]}"`);
+      }
+    }
+    if (changes.length > 0) {
+      log.push(`~ Updated site content "${key}": ${changes.join(', ')}`);
+    }
+  }
+
+  for (const key of Object.keys(oldMap)) {
+    if (!newMap[key]) {
+      log.push(`- Removed site content: "${key}"`);
+    }
+  }
+}
+
 async function syncHandler(request: Request) {
   if (!validateSecret(request)) {
     return NextResponse.json({ error: 'Invalid secret' }, { status: 401 });
@@ -136,16 +206,17 @@ async function syncHandler(request: Request) {
   const startTime = Date.now();
 
   try {
-    // 1. Load existing manifest (or start fresh)
+    // 1. Load existing manifest and cached data
     let manifest: ImageManifest = {};
-    try {
-      const { blobs } = await list({ prefix: 'cache/manifest.json', limit: 1 });
-      if (blobs[0]) {
-        const res = await fetch(blobs[0].url, { cache: 'no-store' });
-        if (res.ok) manifest = await res.json();
-      }
+    const [prevManifest, prevProducts, prevSiteContent] = await Promise.all([
+      loadBlobJson<ImageManifest>('cache/manifest.json'),
+      loadBlobJson<Product[]>('cache/products.json'),
+      loadBlobJson<Record<string, SiteContent>>('cache/site-content.json'),
+    ]);
+    if (prevManifest) {
+      manifest = prevManifest;
       log.push(`Loaded manifest with ${Object.keys(manifest).length} entries`);
-    } catch {
+    } else {
       log.push('No existing manifest found — starting fresh');
     }
 
@@ -223,6 +294,9 @@ async function syncHandler(request: Request) {
 
     const activeProducts = products.filter(p => p.active);
     log.push(`Products: ${activeProducts.length} active / ${products.length} total`);
+    if (prevProducts) {
+      diffProducts(prevProducts, activeProducts, log);
+    }
 
     // 4. Process site content — upload images, build Record<string, SiteContent>
     const contentMap: Record<string, SiteContent> = {};
@@ -266,6 +340,9 @@ async function syncHandler(request: Request) {
       };
     }
 
+    if (prevSiteContent) {
+      diffSiteContent(prevSiteContent, contentMap, log);
+    }
     log.push(`Images: ${imagesUploaded} uploaded, ${imagesSkipped} unchanged, ${imagesFailed} failed`);
     log.push(`Site content keys: ${Object.keys(contentMap).length}`);
 
