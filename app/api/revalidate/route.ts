@@ -4,7 +4,8 @@ import { revalidatePath } from 'next/cache';
 import { fetchAllRecords } from '../../../lib/airtable-fetch';
 import type { Product, SiteContent } from '../../../lib/airtable';
 
-type ImageManifest = Record<string, string>; // key -> blob URL
+type ManifestEntry = { blobUrl: string; attachmentId: string };
+type ImageManifest = Record<string, ManifestEntry>;
 
 function validateSecret(request: Request): boolean {
   const url = new URL(request.url);
@@ -35,11 +36,13 @@ function getExtension(contentType: string): string {
 async function uploadImageIfNeeded(
   imageKey: string,
   sourceUrl: string,
+  attachmentId: string,
   manifest: ImageManifest,
 ): Promise<string> {
-  // Already uploaded? Return existing URL
-  if (manifest[imageKey]) {
-    return manifest[imageKey];
+  // Already uploaded and attachment unchanged? Return existing URL
+  const existing = manifest[imageKey];
+  if (existing && existing.attachmentId === attachmentId) {
+    return existing.blobUrl;
   }
 
   try {
@@ -51,9 +54,10 @@ async function uploadImageIfNeeded(
       access: 'public',
       contentType,
       addRandomSuffix: false,
+      allowOverwrite: true,
     });
 
-    manifest[imageKey] = blob.url;
+    manifest[imageKey] = { blobUrl: blob.url, attachmentId };
     return blob.url;
   } catch (error) {
     console.error(`Failed to upload image ${imageKey}:`, error);
@@ -103,12 +107,13 @@ async function syncHandler(request: Request) {
           const fullSourceUrl = a.thumbnails?.full?.url || a.url;
           const thumbSourceUrl = a.thumbnails?.large?.url || fullSourceUrl;
 
+          const attId = a.id || '';
           const fullKey = `products-${r.id}-${i}-full`;
-          const fullBlobUrl = await uploadImageIfNeeded(fullKey, fullSourceUrl, manifest);
+          const fullBlobUrl = await uploadImageIfNeeded(fullKey, fullSourceUrl, attId, manifest);
           images.push(fullBlobUrl);
 
           const thumbKey = `products-${r.id}-${i}-thumb`;
-          const thumbBlobUrl = await uploadImageIfNeeded(thumbKey, thumbSourceUrl, manifest);
+          const thumbBlobUrl = await uploadImageIfNeeded(thumbKey, thumbSourceUrl, attId, manifest);
           thumbnails.push(thumbBlobUrl);
         }
       }
@@ -148,8 +153,9 @@ async function syncHandler(request: Request) {
       if (firstAttachment) {
         const sourceUrl = firstAttachment.thumbnails?.full?.url || firstAttachment.url || '';
         if (sourceUrl) {
+          const attId = firstAttachment.id || '';
           const imageKey = `site-${r.id}-0-full`;
-          imageUrl = await uploadImageIfNeeded(imageKey, sourceUrl, manifest);
+          imageUrl = await uploadImageIfNeeded(imageKey, sourceUrl, attId, manifest);
         }
       }
 
@@ -169,16 +175,19 @@ async function syncHandler(request: Request) {
         access: 'public',
         contentType: 'application/json',
         addRandomSuffix: false,
+        allowOverwrite: true,
       }),
       put('cache/site-content.json', JSON.stringify(contentMap), {
         access: 'public',
         contentType: 'application/json',
         addRandomSuffix: false,
+        allowOverwrite: true,
       }),
       put('cache/manifest.json', JSON.stringify(manifest), {
         access: 'public',
         contentType: 'application/json',
         addRandomSuffix: false,
+        allowOverwrite: true,
       }),
     ]);
 
