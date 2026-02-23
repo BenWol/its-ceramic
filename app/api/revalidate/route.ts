@@ -245,8 +245,8 @@ async function syncHandler(request: Request) {
       if (Array.isArray(attachments)) {
         for (let i = 0; i < attachments.length; i++) {
           const a = attachments[i];
-          const fullSourceUrl = a.thumbnails?.full?.url || a.url;
-          const thumbSourceUrl = a.thumbnails?.large?.url || fullSourceUrl;
+          const fullSourceUrl = a.url || a.thumbnails?.full?.url;
+          const thumbSourceUrl = a.thumbnails?.large?.url || a.thumbnails?.full?.url || a.url;
 
           const attId = a.id || '';
           const fullKey = `products-${r.id}-${i}-full`;
@@ -312,7 +312,7 @@ async function syncHandler(request: Request) {
 
       let imageUrl = '';
       if (firstAttachment) {
-        const sourceUrl = firstAttachment.thumbnails?.full?.url || firstAttachment.url || '';
+        const sourceUrl = firstAttachment.url || firstAttachment.thumbnails?.full?.url || '';
         if (sourceUrl) {
           const attId = firstAttachment.id || '';
           const imageKey = `site-${r.id}-0-full`;
