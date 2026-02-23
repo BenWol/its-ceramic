@@ -33,16 +33,18 @@ function getExtension(contentType: string): string {
   return mimeMap[contentType] || 'jpg';
 }
 
+type UploadResult = { url: string; action: 'skipped' | 'uploaded' | 'failed' };
+
 async function uploadImageIfNeeded(
   imageKey: string,
   sourceUrl: string,
   attachmentId: string,
   manifest: ImageManifest,
-): Promise<string> {
+): Promise<UploadResult> {
   // Already uploaded and attachment unchanged? Return existing URL
   const existing = manifest[imageKey];
   if (existing && existing.attachmentId === attachmentId) {
-    return existing.blobUrl;
+    return { url: existing.blobUrl, action: 'skipped' };
   }
 
   try {
@@ -58,17 +60,80 @@ async function uploadImageIfNeeded(
     });
 
     manifest[imageKey] = { blobUrl: blob.url, attachmentId };
-    return blob.url;
+    return { url: blob.url, action: 'uploaded' };
   } catch (error) {
     console.error(`Failed to upload image ${imageKey}:`, error);
-    return sourceUrl; // fall back to Airtable URL
+    return { url: sourceUrl, action: 'failed' };
   }
+}
+
+function renderResponse(
+  success: boolean,
+  log: string[],
+  stats: Record<string, number> | null,
+  request: Request,
+  errorMsg?: string,
+) {
+  const accept = request.headers.get('accept') || '';
+  const isHtml = accept.includes('text/html');
+
+  if (!isHtml) {
+    if (!success) {
+      return NextResponse.json({ error: errorMsg || 'Revalidation failed' }, { status: 500 });
+    }
+    return NextResponse.json({ success: true, stats, log });
+  }
+
+  const statusIcon = success ? '&#10003;' : '&#10007;';
+  const statusColor = success ? '#22c55e' : '#ef4444';
+  const statusText = success ? 'Sync completed' : 'Sync failed';
+
+  const logHtml = log
+    .map(line => {
+      let color = '#cbd5e1';
+      if (line.startsWith('FAILED') || line.startsWith('ERROR')) color = '#ef4444';
+      else if (line.startsWith('Uploaded')) color = '#22c55e';
+      return `<div style="color:${color};padding:2px 0">${line}</div>`;
+    })
+    .join('\n');
+
+  const statsHtml = stats
+    ? Object.entries(stats)
+        .map(([k, v]) => `<div><strong>${k}:</strong> ${v}</div>`)
+        .join('\n')
+    : '';
+
+  const html = `<!DOCTYPE html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>its ceramic — sync</title>
+<style>
+  body { font-family: system-ui, sans-serif; background: #0f172a; color: #e2e8f0; margin: 0; padding: 2rem; }
+  .container { max-width: 640px; margin: 0 auto; }
+  h1 { font-size: 1.25rem; font-weight: 600; margin: 0 0 1.5rem; }
+  .status { display: inline-flex; align-items: center; gap: .5rem; color: ${statusColor}; font-weight: 600; margin-bottom: 1rem; }
+  .log { background: #1e293b; border-radius: 8px; padding: 1rem; font-family: monospace; font-size: .8rem; line-height: 1.6; margin-bottom: 1rem; overflow-x: auto; }
+  .stats { background: #1e293b; border-radius: 8px; padding: 1rem; font-size: .85rem; line-height: 1.8; }
+</style></head>
+<body><div class="container">
+  <h1>its ceramic — sync</h1>
+  <div class="status"><span style="font-size:1.2rem">${statusIcon}</span> ${statusText}</div>
+  <div class="log">${logHtml}</div>
+  ${statsHtml ? `<div class="stats">${statsHtml}</div>` : ''}
+</div></body></html>`;
+
+  return new NextResponse(html, {
+    status: success ? 200 : 500,
+    headers: { 'Content-Type': 'text/html; charset=utf-8' },
+  });
 }
 
 async function syncHandler(request: Request) {
   if (!validateSecret(request)) {
     return NextResponse.json({ error: 'Invalid secret' }, { status: 401 });
   }
+
+  const log: string[] = [];
+  const startTime = Date.now();
 
   try {
     // 1. Load existing manifest (or start fresh)
@@ -79,8 +144,9 @@ async function syncHandler(request: Request) {
         const res = await fetch(blobs[0].url, { cache: 'no-store' });
         if (res.ok) manifest = await res.json();
       }
+      log.push(`Loaded manifest with ${Object.keys(manifest).length} entries`);
     } catch {
-      // first run, no manifest yet
+      log.push('No existing manifest found — starting fresh');
     }
 
     // 2. Fetch raw data from Airtable
@@ -91,9 +157,13 @@ async function syncHandler(request: Request) {
       fetchAllRecords(productsTable, { field: 'Order', direction: 'desc' }),
       fetchAllRecords(siteImagesTable),
     ]);
+    log.push(`Fetched ${productRecords.length} products and ${siteRecords.length} site images from Airtable`);
 
     // 3. Process products — upload images, build Product[]
     const products: Product[] = [];
+    let imagesUploaded = 0;
+    let imagesSkipped = 0;
+    let imagesFailed = 0;
 
     for (const r of productRecords) {
       const f = r.fields || {};
@@ -109,12 +179,28 @@ async function syncHandler(request: Request) {
 
           const attId = a.id || '';
           const fullKey = `products-${r.id}-${i}-full`;
-          const fullBlobUrl = await uploadImageIfNeeded(fullKey, fullSourceUrl, attId, manifest);
-          images.push(fullBlobUrl);
+          const fullResult = await uploadImageIfNeeded(fullKey, fullSourceUrl, attId, manifest);
+          images.push(fullResult.url);
+          if (fullResult.action === 'uploaded') {
+            imagesUploaded++;
+            log.push(`Uploaded image for "${f.Name || r.id}" (full #${i})`);
+          } else if (fullResult.action === 'failed') {
+            imagesFailed++;
+            log.push(`FAILED image for "${f.Name || r.id}" (full #${i})`);
+          } else {
+            imagesSkipped++;
+          }
 
           const thumbKey = `products-${r.id}-${i}-thumb`;
-          const thumbBlobUrl = await uploadImageIfNeeded(thumbKey, thumbSourceUrl, attId, manifest);
-          thumbnails.push(thumbBlobUrl);
+          const thumbResult = await uploadImageIfNeeded(thumbKey, thumbSourceUrl, attId, manifest);
+          thumbnails.push(thumbResult.url);
+          if (thumbResult.action === 'uploaded') {
+            imagesUploaded++;
+          } else if (thumbResult.action === 'failed') {
+            imagesFailed++;
+          } else {
+            imagesSkipped++;
+          }
         }
       }
 
@@ -136,6 +222,7 @@ async function syncHandler(request: Request) {
     }
 
     const activeProducts = products.filter(p => p.active);
+    log.push(`Products: ${activeProducts.length} active / ${products.length} total`);
 
     // 4. Process site content — upload images, build Record<string, SiteContent>
     const contentMap: Record<string, SiteContent> = {};
@@ -155,7 +242,17 @@ async function syncHandler(request: Request) {
         if (sourceUrl) {
           const attId = firstAttachment.id || '';
           const imageKey = `site-${r.id}-0-full`;
-          imageUrl = await uploadImageIfNeeded(imageKey, sourceUrl, attId, manifest);
+          const result = await uploadImageIfNeeded(imageKey, sourceUrl, attId, manifest);
+          imageUrl = result.url;
+          if (result.action === 'uploaded') {
+            imagesUploaded++;
+            log.push(`Uploaded site image "${key}"`);
+          } else if (result.action === 'failed') {
+            imagesFailed++;
+            log.push(`FAILED site image "${key}"`);
+          } else {
+            imagesSkipped++;
+          }
         }
       }
 
@@ -168,6 +265,9 @@ async function syncHandler(request: Request) {
         description: f.Description || '',
       };
     }
+
+    log.push(`Images: ${imagesUploaded} uploaded, ${imagesSkipped} unchanged, ${imagesFailed} failed`);
+    log.push(`Site content keys: ${Object.keys(contentMap).length}`);
 
     // 5. Save JSON files to Blob
     await Promise.all([
@@ -190,24 +290,25 @@ async function syncHandler(request: Request) {
         allowOverwrite: true,
       }),
     ]);
+    log.push('Saved JSON caches to Blob');
 
     // 6. Revalidate all pages
     revalidatePath('/', 'layout');
 
-    return NextResponse.json({
-      success: true,
-      stats: {
-        products: activeProducts.length,
-        siteContentKeys: Object.keys(contentMap).length,
-        imagesInManifest: Object.keys(manifest).length,
-      },
-    });
+    const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+    log.push(`Revalidated all pages — done in ${elapsed}s`);
+
+    return renderResponse(true, log, {
+      products: activeProducts.length,
+      siteContentKeys: Object.keys(contentMap).length,
+      imagesUploaded,
+      imagesSkipped,
+      imagesFailed,
+    }, request);
   } catch (error: any) {
     console.error('Revalidation failed:', error);
-    return NextResponse.json(
-      { error: error.message || 'Revalidation failed' },
-      { status: 500 },
-    );
+    log.push(`ERROR: ${error.message || 'Unknown error'}`);
+    return renderResponse(false, log, null, request, error.message);
   }
 }
 
