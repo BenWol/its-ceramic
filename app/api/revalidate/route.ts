@@ -202,8 +202,15 @@ async function syncHandler(request: Request) {
     return NextResponse.json({ error: 'Invalid secret' }, { status: 401 });
   }
 
+  const url = new URL(request.url);
+  const force = url.searchParams.get('force') === 'true';
+
   const log: string[] = [];
   const startTime = Date.now();
+
+  if (force) {
+    log.push('Force mode — re-uploading all images');
+  }
 
   try {
     // 1. Load existing manifest and cached data
@@ -213,7 +220,9 @@ async function syncHandler(request: Request) {
       loadBlobJson<Product[]>('cache/products.json'),
       loadBlobJson<Record<string, SiteContent>>('cache/site-content.json'),
     ]);
-    if (prevManifest) {
+    if (force) {
+      log.push('Manifest ignored (force mode)');
+    } else if (prevManifest) {
       manifest = prevManifest;
       log.push(`Loaded manifest with ${Object.keys(manifest).length} entries`);
     } else {
