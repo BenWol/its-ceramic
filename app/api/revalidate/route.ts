@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server';
 import { put, list } from '@vercel/blob';
 import { revalidatePath } from 'next/cache';
 import { fetchAllRecords } from '../../../lib/airtable-fetch';
-import type { Product, SiteContent } from '../../../lib/airtable';
+import type { Collection, Product, SiteContent } from '../../../lib/airtable';
+import { slugify } from '../../../lib/slug';
 
 type ManifestEntry = { blobUrl: string; attachmentId: string };
 type ImageManifest = Record<string, ManifestEntry>;
@@ -197,6 +198,32 @@ function diffSiteContent(oldMap: Record<string, SiteContent>, newMap: Record<str
   }
 }
 
+function diffCollections(oldList: Collection[], newList: Collection[], log: string[]) {
+  const oldMap = new Map(oldList.map(c => [c.id, c]));
+  const newMap = new Map(newList.map(c => [c.id, c]));
+  const textFields = ['name', 'description', 'alt', 'order'] as const;
+
+  for (const c of newList) {
+    const old = oldMap.get(c.id);
+    if (!old) {
+      log.push(`+ New collection: "${c.name}"`);
+      continue;
+    }
+    const changes = textFields
+      .filter(f => String(old[f]) !== String(c[f]))
+      .map(f => `${f}: "${old[f]}" → "${c[f]}"`);
+    if (changes.length > 0) {
+      log.push(`~ Updated collection "${c.name}": ${changes.join(', ')}`);
+    }
+  }
+
+  for (const old of oldList) {
+    if (!newMap.has(old.id)) {
+      log.push(`- Removed collection: "${old.name}"`);
+    }
+  }
+}
+
 async function syncHandler(request: Request) {
   if (!validateSecret(request)) {
     return NextResponse.json({ error: 'Invalid secret' }, { status: 401 });
@@ -215,10 +242,11 @@ async function syncHandler(request: Request) {
   try {
     // 1. Load existing manifest and cached data
     let manifest: ImageManifest = {};
-    const [prevManifest, prevProducts, prevSiteContent] = await Promise.all([
+    const [prevManifest, prevProducts, prevSiteContent, prevCollections] = await Promise.all([
       loadBlobJson<ImageManifest>('cache/manifest.json'),
       loadBlobJson<Product[]>('cache/products.json'),
       loadBlobJson<Record<string, SiteContent>>('cache/site-content.json'),
+      loadBlobJson<Collection[]>('cache/collections.json'),
     ]);
     if (force) {
       log.push('Manifest ignored (force mode)');
@@ -232,12 +260,14 @@ async function syncHandler(request: Request) {
     // 2. Fetch raw data from Airtable
     const productsTable = process.env.AIRTABLE_TABLE_NAME || 'Products';
     const siteImagesTable = process.env.AIRTABLE_SITE_IMAGES_TABLE || 'Site Images';
+    const collectionsTable = process.env.AIRTABLE_COLLECTIONS_TABLE || 'Collections';
 
-    const [productRecords, siteRecords] = await Promise.all([
+    const [productRecords, siteRecords, collectionRecords] = await Promise.all([
       fetchAllRecords(productsTable, { field: 'Order', direction: 'desc' }),
       fetchAllRecords(siteImagesTable),
+      fetchAllRecords(collectionsTable, { field: 'Order', direction: 'asc' }),
     ]);
-    log.push(`Fetched ${productRecords.length} products and ${siteRecords.length} site images from Airtable`);
+    log.push(`Fetched ${productRecords.length} products, ${siteRecords.length} site images and ${collectionRecords.length} collections from Airtable`);
 
     // 3. Process products — upload images, build Product[]
     const products: Product[] = [];
@@ -352,6 +382,53 @@ async function syncHandler(request: Request) {
     if (prevSiteContent) {
       diffSiteContent(prevSiteContent, contentMap, log);
     }
+
+    // 4b. Process collections — upload cover images, build Collection[]
+    const collections: Collection[] = [];
+
+    for (const r of collectionRecords) {
+      const f = r.fields || {};
+      if (!f.Active || !f.Name) continue;
+
+      const attachments = f.Image || [];
+      const firstAttachment =
+        Array.isArray(attachments) && attachments.length > 0 ? attachments[0] : null;
+
+      let imageUrl = '';
+      if (firstAttachment) {
+        const sourceUrl = firstAttachment.url || firstAttachment.thumbnails?.full?.url || '';
+        if (sourceUrl) {
+          const attId = firstAttachment.id || '';
+          const imageKey = `collections-${r.id}-0-full`;
+          const result = await uploadImageIfNeeded(imageKey, sourceUrl, attId, manifest);
+          imageUrl = result.url;
+          if (result.action === 'uploaded') {
+            imagesUploaded++;
+            log.push(`Uploaded collection image "${f.Name}"`);
+          } else if (result.action === 'failed') {
+            imagesFailed++;
+            log.push(`FAILED collection image "${f.Name}"`);
+          } else {
+            imagesSkipped++;
+          }
+        }
+      }
+
+      collections.push({
+        id: r.id,
+        name: f.Name,
+        slug: slugify(f.Name),
+        description: f.Description || '',
+        image: imageUrl,
+        alt: f.Alt || '',
+        order: Number(f.Order ?? 0),
+      });
+    }
+
+    log.push(`Collections: ${collections.length} active / ${collectionRecords.length} total`);
+    if (prevCollections) {
+      diffCollections(prevCollections, collections, log);
+    }
     log.push(`Images: ${imagesUploaded} uploaded, ${imagesSkipped} unchanged, ${imagesFailed} failed`);
     log.push(`Site content keys: ${Object.keys(contentMap).length}`);
 
@@ -364,6 +441,12 @@ async function syncHandler(request: Request) {
         allowOverwrite: true,
       }),
       put('cache/site-content.json', JSON.stringify(contentMap), {
+        access: 'public',
+        contentType: 'application/json',
+        addRandomSuffix: false,
+        allowOverwrite: true,
+      }),
+      put('cache/collections.json', JSON.stringify(collections), {
         access: 'public',
         contentType: 'application/json',
         addRandomSuffix: false,
@@ -387,6 +470,7 @@ async function syncHandler(request: Request) {
     return renderResponse(true, log, {
       products: activeProducts.length,
       siteContentKeys: Object.keys(contentMap).length,
+      collections: collections.length,
       imagesUploaded,
       imagesSkipped,
       imagesFailed,
