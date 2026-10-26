@@ -7,6 +7,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import ProductCard from './ProductCard';
 import ContactModal, { ContactType } from './ContactModal';
 import type { Product } from '../../lib/airtable';
+import { slugify } from '../../lib/slug';
 
 type ProductDetailProps = {
   product: Product;
@@ -53,7 +54,7 @@ export default function ProductDetail({ product, relatedProducts, productNotice 
             {/* Images */}
             <div className="space-y-4">
               {/* Main Image */}
-              <div className="relative aspect-square bg-gray-100 border border-gray-200 overflow-hidden">
+              <div className="relative aspect-[3/4] bg-gray-100 border border-gray-200 overflow-hidden">
                 {images.length > 0 ? (
                   <Image
                     src={images[currentImageIndex]}
@@ -104,7 +105,7 @@ export default function ProductDetail({ product, relatedProducts, productNotice 
                     <button
                       key={idx}
                       onClick={() => setCurrentImageIndex(idx)}
-                      className={`relative flex-shrink-0 w-20 h-20 border overflow-hidden ${
+                      className={`relative flex-shrink-0 w-[60px] h-20 border overflow-hidden ${
                         idx === currentImageIndex ? 'border-gray-900' : 'border-gray-200'
                       }`}
                     >
@@ -131,7 +132,7 @@ export default function ProductDetail({ product, relatedProducts, productNotice 
                     <>
                       <span>|</span>
                       <Link
-                        href={`/colecciones/${product.collection.toLowerCase().replace(/á/g, 'a').replace(/ /g, '-')}`}
+                        href={`/colecciones/${slugify(product.collection)}`}
                         className="hover:text-gray-900"
                       >
                         {product.collection}

@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { getProducts, getSiteContent, createSiteContentHelpers } from '../../../lib/airtable';
+import { getCatalog, getSiteContent, createSiteContentHelpers } from '../../../lib/airtable';
 import ProductDetail from '../../components/ProductDetail';
 
 export const revalidate = false;
@@ -7,8 +7,8 @@ export const revalidate = false;
 export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
-  const [products, siteContent] = await Promise.all([
-    getProducts(),
+  const [{ products }, siteContent] = await Promise.all([
+    getCatalog(),
     getSiteContent(),
   ]);
 
@@ -20,9 +20,12 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     notFound();
   }
 
-  // Related products: same collection, excluding current
+  // Related products: same collection (or same category for pieces outside a collection), excluding current
   const relatedProducts = products
-    .filter((p) => p.id !== id && p.collection === product.collection)
+    .filter((p) =>
+      p.id !== id &&
+      (product.collection ? p.collection === product.collection : p.category === product.category),
+    )
     .slice(0, 4);
 
   const productNotice = getDescription('product-notice', 'Cada pieza está torneada a mano en el torno; por lo tanto, cada pieza es única y puede presentar ligeras variaciones en forma, tamaño o color.');

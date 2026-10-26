@@ -1,10 +1,10 @@
-import { getProducts } from '../../lib/airtable';
+import { getCatalog } from '../../lib/airtable';
 import ProductFilter from '../components/ProductFilter';
 
 export const revalidate = false;
 
 export default async function PiezasPage() {
-  const products = await getProducts();
+  const { products } = await getCatalog();
 
   return (
     <div className="bg-warm-white">

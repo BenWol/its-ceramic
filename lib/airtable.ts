@@ -1,5 +1,6 @@
 import { cache } from 'react';
 import { list } from '@vercel/blob';
+import { slugify } from './slug';
 
 // Types
 export type ProductImage = {
@@ -21,6 +22,16 @@ export type Product = {
   thumbnails: string[];
   active: boolean;
   stock: 'available' | 'sold';
+};
+
+export type Collection = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  image: string;
+  alt: string;
+  order: number;
 };
 
 export type SiteContent = {
@@ -114,6 +125,29 @@ async function fetchSiteContentFromAirtable(): Promise<Record<string, SiteConten
   return contentMap;
 }
 
+async function fetchCollectionsFromAirtable(): Promise<Collection[]> {
+  const { fetchAllRecords } = await import('./airtable-fetch');
+  const tableName = process.env.AIRTABLE_COLLECTIONS_TABLE || 'Collections';
+  const records = await fetchAllRecords(tableName, { field: 'Order', direction: 'asc' });
+
+  return records
+    .filter(r => r.fields?.Active && r.fields?.Name)
+    .map(r => {
+      const f = r.fields;
+      const attachments = f.Image || [];
+      const first = Array.isArray(attachments) && attachments.length > 0 ? attachments[0] : null;
+      return {
+        id: r.id,
+        name: f.Name,
+        slug: slugify(f.Name),
+        description: f.Description || '',
+        image: first ? first.thumbnails?.full?.url || first.url || '' : '',
+        alt: f.Alt || '',
+        order: Number(f.Order ?? 0),
+      };
+    });
+}
+
 // Products — reads from Vercel Blob cache, falls back to Airtable
 export const getProducts = cache(async (): Promise<Product[]> => {
   const url = await findBlobUrl('cache/products.json');
@@ -156,6 +190,50 @@ export const getSiteContent = cache(async (): Promise<Record<string, SiteContent
     console.error('Failed to fetch site content from both Blob and Airtable:', err);
     return {};
   }
+});
+
+// Collections — reads from Vercel Blob cache, falls back to Airtable
+export const getCollections = cache(async (): Promise<Collection[]> => {
+  const url = await findBlobUrl('cache/collections.json');
+
+  if (url) {
+    try {
+      const res = await fetch(url, { next: { tags: ['collections'] } });
+      if (res.ok) return res.json();
+    } catch {
+      // Blob not available, fall through to Airtable
+    }
+  }
+
+  console.warn('Blob cache miss for collections — falling back to Airtable');
+  try {
+    return await fetchCollectionsFromAirtable();
+  } catch (err) {
+    console.error('Failed to fetch collections from both Blob and Airtable:', err);
+    return [];
+  }
+});
+
+// Products and collections together, with each product's collection set to the
+// collection's display name ("Marmol" → "Mármol"), or '' when it isn't a published
+// collection (e.g. "Special"), so pieces never link to a collection page that doesn't exist.
+export const getCatalog = cache(async () => {
+  const [products, collections] = await Promise.all([getProducts(), getCollections()]);
+  const bySlug = new Map(collections.map(c => [c.slug, c]));
+
+  const normalizedProducts = products.map(p => ({
+    ...p,
+    collection: bySlug.get(slugify(p.collection))?.name || '',
+  }));
+
+  // Collections without their own photo use the first photo of one of their pieces
+  const collectionsWithImages = collections.map(c => {
+    if (c.image) return c;
+    const piece = normalizedProducts.find(p => p.collection === c.name && p.images.length > 0);
+    return { ...c, image: piece?.images[0] || '' };
+  });
+
+  return { products: normalizedProducts, collections: collectionsWithImages };
 });
 
 // Site content helpers (same logic as the useSiteContent hook, but for server components)

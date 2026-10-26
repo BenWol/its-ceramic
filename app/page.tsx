@@ -2,34 +2,20 @@ import Link from 'next/link';
 import Image from 'next/image';
 import ProductCard from './components/ProductCard';
 import InstagramEmbed from './components/InstagramEmbed';
-import { getProducts, getSiteContent, createSiteContentHelpers } from '../lib/airtable';
+import { getCatalog, getSiteContent, createSiteContentHelpers } from '../lib/airtable';
 
 export const revalidate = false;
 
-const collections = [
-  {
-    slug: 'circus',
-    key: 'collection-circus',
-    fallbackName: 'Circus',
-    fallbackDescription: 'Jarrones de estética expresiva y espíritu lúdico.',
-  },
-  {
-    slug: 'marmol',
-    key: 'collection-marmol',
-    fallbackName: 'Mármol',
-    fallbackDescription: 'Inspirados en las vetas y contrastes del mármol.',
-  },
-  {
-    slug: 'materia',
-    key: 'collection-materia',
-    fallbackName: 'Materia',
-    fallbackDescription: 'Cerámica de mesa en tonos tierra para el día a día.',
-  },
-];
+// Grid columns for the collections preview, so 2, 3 or 4 collections fill a row
+const collectionGridCols: Record<number, string> = {
+  1: 'md:grid-cols-1 max-w-xl mx-auto',
+  2: 'md:grid-cols-2',
+  3: 'md:grid-cols-3',
+};
 
 export default async function HomePage() {
-  const [products, siteContent] = await Promise.all([
-    getProducts(),
+  const [{ products, collections }, siteContent] = await Promise.all([
+    getCatalog(),
     getSiteContent(),
   ]);
 
@@ -96,15 +82,15 @@ export default async function HomePage() {
               Colecciones
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              {getDescription('collections-intro', 'Tres líneas que hablan distintos acentos dentro del mismo lenguaje artesanal.')}
+              {getDescription('collections-intro', 'Distintas líneas que hablan acentos diferentes dentro del mismo lenguaje artesanal.')}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className={`grid grid-cols-1 gap-8 ${collectionGridCols[collections.length] || 'sm:grid-cols-2 lg:grid-cols-4'}`}>
             {collections.map((collection) => {
-              const imageUrl = getImage(collection.key);
-              const title = getTitle(collection.key, collection.fallbackName);
-              const description = getDescription(collection.key, collection.fallbackDescription);
+              const imageUrl = collection.image;
+              const title = collection.name;
+              const description = collection.description;
 
               return (
                 <Link
@@ -112,19 +98,18 @@ export default async function HomePage() {
                   href={`/colecciones/${collection.slug}`}
                   className="group"
                 >
-                  <div className="relative aspect-[4/3] bg-gray-100 border border-gray-200 mb-4 overflow-hidden">
+                  <div className="relative aspect-[3/4] bg-gray-100 border border-gray-200 mb-4 overflow-hidden">
                     {imageUrl ? (
                       <Image
                         src={imageUrl}
-                        alt={title}
+                        alt={collection.alt || title}
                         fill
-                        sizes="(max-width: 768px) 100vw, 33vw"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                         className="object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center flex-col gap-1">
-                        <span className="text-gray-400 text-xs font-mono">[{collection.key}:image]</span>
-                        <span className="text-gray-400 text-sm">{collection.fallbackName}</span>
+                      <div className="w-full h-full flex items-center justify-center">
+                        <span className="text-gray-400 text-sm">{title}</span>
                       </div>
                     )}
                   </div>

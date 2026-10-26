@@ -1,46 +1,22 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { getProducts } from '../../../lib/airtable';
+import { getCatalog } from '../../../lib/airtable';
 import ProductCard from '../../components/ProductCard';
 
 export const revalidate = false;
 
-const collectionInfo: Record<string, { name: string; description: string; slug: string }> = {
-  circus: {
-    name: 'Colección Circus',
-    description: 'Jarrones de cerámica artesanal de formas redondeadas y estética expresiva. Piezas con un espíritu lúdico y contemporáneo, concebidas como objetos decorativos con identidad propia.',
-    slug: 'circus',
-  },
-  marmol: {
-    name: 'Colección Mármol',
-    description: 'Jarrones de cerámica artesanal inspirados en las vetas y contrastes del mármol. Piezas únicas de carácter decorativo, donde el color y la superficie adquieren protagonismo.',
-    slug: 'marmol',
-  },
-  materia: {
-    name: 'Colección Materia',
-    description: 'Cerámica artesanal de mesa en tonos tierra, pensada para el uso cotidiano. Piezas funcionales de formas orgánicas que acompañan la mesa del día a día.',
-    slug: 'materia',
-  },
-};
-
-// Normalize string for comparison (remove accents, lowercase)
-const normalize = (str: string) => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-
 export default async function CollectionPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
 
-  const info = collectionInfo[slug];
+  const { products, collections } = await getCatalog();
+  const collection = collections.find((c) => c.slug === slug);
 
-  if (!info) {
+  if (!collection) {
     notFound();
   }
 
-  const products = await getProducts();
-
-  // Filter products by collection (normalize to handle accent variations)
-  const collectionProducts = products.filter((p) => {
-    return p.collection && normalize(p.collection) === info.slug;
-  });
+  const info = { name: `Colección ${collection.name}`, description: collection.description };
+  const collectionProducts = products.filter((p) => p.collection === collection.name);
 
   return (
     <div className="bg-warm-white">

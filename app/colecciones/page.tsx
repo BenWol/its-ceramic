@@ -1,33 +1,15 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { getSiteContent, createSiteContentHelpers } from '../../lib/airtable';
+import { getCatalog, getSiteContent, createSiteContentHelpers } from '../../lib/airtable';
 
 export const revalidate = false;
 
-const collections = [
-  {
-    slug: 'circus',
-    key: 'collection-circus',
-    fallbackName: 'Colección Circus',
-    fallbackDescription: 'Jarrones de cerámica artesanal de formas redondeadas y estética expresiva. Piezas con un espíritu lúdico y contemporáneo, concebidas como objetos decorativos con identidad propia.',
-  },
-  {
-    slug: 'marmol',
-    key: 'collection-marmol',
-    fallbackName: 'Colección Mármol',
-    fallbackDescription: 'Jarrones de cerámica artesanal inspirados en las vetas y contrastes del mármol. Piezas únicas de carácter decorativo, donde el color y la superficie adquieren protagonismo.',
-  },
-  {
-    slug: 'materia',
-    key: 'collection-materia',
-    fallbackName: 'Colección Materia',
-    fallbackDescription: 'Cerámica artesanal de mesa en tonos tierra, pensada para el uso cotidiano. Piezas funcionales de formas orgánicas que acompañan la mesa del día a día.',
-  },
-];
-
 export default async function ColeccionesPage() {
-  const siteContent = await getSiteContent();
-  const { getImage, getTitle, getDescription, getAlt } = createSiteContentHelpers(siteContent);
+  const [{ collections }, siteContent] = await Promise.all([
+    getCatalog(),
+    getSiteContent(),
+  ]);
+  const { getDescription } = createSiteContentHelpers(siteContent);
 
   return (
     <div className="bg-warm-white">
@@ -38,7 +20,7 @@ export default async function ColeccionesPage() {
             Colecciones
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            {getDescription('collections-intro', 'Cada colección cuenta una historia diferente. Tres líneas que hablan distintos acentos dentro del mismo lenguaje artesanal.')}
+            {getDescription('collections-intro', 'Cada colección cuenta una historia diferente, dentro del mismo lenguaje artesanal.')}
           </p>
         </div>
       </section>
@@ -47,10 +29,10 @@ export default async function ColeccionesPage() {
       <section className="py-16 px-6">
         <div className="max-w-7xl mx-auto space-y-24">
           {collections.map((collection, index) => {
-            const imageUrl = getImage(collection.key);
-            const title = getTitle(collection.key, collection.fallbackName);
-            const description = getDescription(collection.key, collection.fallbackDescription);
-            const alt = getAlt(collection.key, title);
+            const imageUrl = collection.image;
+            const title = collection.name;
+            const description = collection.description;
+            const alt = collection.alt || title;
 
             return (
               <div
@@ -71,9 +53,8 @@ export default async function ColeccionesPage() {
                         className="object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center flex-col gap-1">
-                        <span className="text-gray-400 text-xs font-mono">[{collection.key}:image]</span>
-                        <span className="text-gray-400 text-sm">{collection.fallbackName}</span>
+                      <div className="w-full h-full flex items-center justify-center">
+                        <span className="text-gray-400 text-sm">{title}</span>
                       </div>
                     )}
                   </div>

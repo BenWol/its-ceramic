@@ -13,7 +13,7 @@ export default function ProductCard({ product, showCollection = false }: Product
   return (
     <Link href={`/piezas/${product.id}`} className="group block">
       {/* Image */}
-      <div className="relative bg-gray-100 aspect-square mb-4 flex items-center justify-center border border-gray-200 overflow-hidden">
+      <div className="relative bg-gray-100 aspect-[3/4] mb-4 flex items-center justify-center border border-gray-200 overflow-hidden">
         {/* Sold out badge */}
         {isSoldOut && (
           <div className="absolute top-3 left-3 z-10 bg-gray-600 text-white text-xs font-medium py-1 px-3">

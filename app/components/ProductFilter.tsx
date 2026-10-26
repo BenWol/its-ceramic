@@ -4,16 +4,33 @@ import { useState } from 'react';
 import ProductCard from './ProductCard';
 import type { Product } from '../../lib/airtable';
 
-const categories = [
-  { id: 'all', label: 'Todas' },
-  { id: 'jarron', label: 'Jarrones' },
-  { id: 'jarra', label: 'Jarras' },
-  { id: 'set', label: 'Sets' },
-  { id: 'taza', label: 'Tazas' },
-];
+// Plural labels and display order for known Airtable categories; any new category
+// still gets a filter button, labelled with its capitalised name and shown last.
+const categoryLabels: Record<string, string> = {
+  jarron: 'Jarrones',
+  jarra: 'Jarras',
+  set: 'Sets',
+  taza: 'Tazas',
+  portavelas: 'Portavelas',
+  bandeja: 'Bandejas',
+};
+
+const categoryLabel = (id: string) =>
+  categoryLabels[id] || id.charAt(0).toUpperCase() + id.slice(1);
 
 export default function ProductFilter({ products }: { products: Product[] }) {
   const [selectedCategory, setSelectedCategory] = useState('all');
+
+  const knownOrder = Object.keys(categoryLabels);
+  const presentCategories = [...new Set(products.map((p) => p.category).filter(Boolean))].sort((a, b) => {
+    const ia = knownOrder.indexOf(a);
+    const ib = knownOrder.indexOf(b);
+    return (ia === -1 ? knownOrder.length : ia) - (ib === -1 ? knownOrder.length : ib) || a.localeCompare(b);
+  });
+  const categories = [
+    { id: 'all', label: 'Todas' },
+    ...presentCategories.map((id) => ({ id, label: categoryLabel(id) })),
+  ];
 
   const filteredProducts =
     selectedCategory === 'all'
