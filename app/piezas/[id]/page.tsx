@@ -3,6 +3,13 @@ import { getCatalog, getSiteContent, createSiteContentHelpers } from '../../../l
 import ProductDetail from '../../components/ProductDetail';
 
 export const revalidate = false;
+export const dynamicParams = false;
+
+// Every piece page is built ahead of time; unknown ids are a 404
+export async function generateStaticParams() {
+  const { products } = await getCatalog();
+  return products.map((p) => ({ id: p.id }));
+}
 
 export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

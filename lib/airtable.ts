@@ -1,6 +1,6 @@
 import { cache } from 'react';
-import { list } from '@vercel/blob';
 import { slugify } from './slug';
+import catalogData from '../data/catalog.json';
 
 // Types
 export type ProductImage = {
@@ -43,176 +43,22 @@ export type SiteContent = {
   description?: string;
 };
 
-// Find a blob's public URL by its path prefix
-async function findBlobUrl(prefix: string): Promise<string | null> {
-  try {
-    const { blobs } = await list({ prefix, limit: 1 });
-    return blobs[0]?.url || null;
-  } catch {
-    return null;
-  }
-}
+// The catalog is copied from Airtable into data/catalog.json (and the photos into
+// public/media) by scripts/sync-catalog.mjs, so pages are built once and visits
+// never call Airtable or Vercel Blob.
+type CatalogFile = {
+  products: Product[];
+  siteContent: Record<string, SiteContent>;
+  collections: Collection[];
+};
 
-// Fallback: fetch directly from Airtable (used when Blob cache is not seeded yet)
-async function fetchProductsFromAirtable(): Promise<Product[]> {
-  const { fetchAllRecords } = await import('./airtable-fetch');
-  const tableName = process.env.AIRTABLE_TABLE_NAME || 'Products';
-  const records = await fetchAllRecords(tableName, { field: 'Order', direction: 'desc' });
+const catalogFile = catalogData as CatalogFile;
 
-  return records
-    .map(r => {
-      const f = r.fields || {};
-      const attachments = f.Image || f.Images || [];
-      const images: string[] = [];
-      const thumbnails: string[] = [];
+export const getProducts = cache(async (): Promise<Product[]> => catalogFile.products);
 
-      if (Array.isArray(attachments)) {
-        for (const a of attachments) {
-          const fullUrl = a.thumbnails?.full?.url || a.url;
-          const thumbUrl = a.thumbnails?.large?.url || fullUrl;
-          if (fullUrl) images.push(fullUrl);
-          if (thumbUrl) thumbnails.push(thumbUrl);
-        }
-      }
+export const getSiteContent = cache(async (): Promise<Record<string, SiteContent>> => catalogFile.siteContent);
 
-      return {
-        id: r.id,
-        name: f.Name || '',
-        category: f.Category || '',
-        collection: f.Collection || '',
-        material: f.Material || '',
-        technique: f.Technique || '',
-        dimensions: f.Dimensions || '',
-        description: f.Description || '',
-        price: Number(f.Price ?? 0),
-        images,
-        thumbnails,
-        active: !!f.Active,
-        stock: (f.Stock === 'sold' ? 'sold' : 'available') as 'available' | 'sold',
-      };
-    })
-    .filter(p => p.active);
-}
-
-async function fetchSiteContentFromAirtable(): Promise<Record<string, SiteContent>> {
-  const { fetchAllRecords } = await import('./airtable-fetch');
-  const tableName = process.env.AIRTABLE_SITE_IMAGES_TABLE || 'Site Images';
-  const records = await fetchAllRecords(tableName);
-
-  const contentMap: Record<string, SiteContent> = {};
-  records.forEach(r => {
-    const f = r.fields || {};
-    const key = f.Key || '';
-    if (!key) return;
-
-    const attachments = f.Image || f.Images || [];
-    const firstAttachment =
-      Array.isArray(attachments) && attachments.length > 0 ? attachments[0] : null;
-    const imageUrl = firstAttachment
-      ? firstAttachment.thumbnails?.full?.url || firstAttachment.url || ''
-      : '';
-
-    contentMap[key] = {
-      id: r.id,
-      key,
-      image: imageUrl,
-      alt: f.Alt || '',
-      title: f.Title || '',
-      description: f.Description || '',
-    };
-  });
-
-  return contentMap;
-}
-
-async function fetchCollectionsFromAirtable(): Promise<Collection[]> {
-  const { fetchAllRecords } = await import('./airtable-fetch');
-  const tableName = process.env.AIRTABLE_COLLECTIONS_TABLE || 'Collections';
-  const records = await fetchAllRecords(tableName, { field: 'Order', direction: 'asc' });
-
-  return records
-    .filter(r => r.fields?.Active && r.fields?.Name)
-    .map(r => {
-      const f = r.fields;
-      const attachments = f.Image || [];
-      const first = Array.isArray(attachments) && attachments.length > 0 ? attachments[0] : null;
-      return {
-        id: r.id,
-        name: f.Name,
-        slug: slugify(f.Name),
-        description: f.Description || '',
-        image: first ? first.thumbnails?.full?.url || first.url || '' : '',
-        alt: f.Alt || '',
-        order: Number(f.Order ?? 0),
-      };
-    });
-}
-
-// Products — reads from Vercel Blob cache, falls back to Airtable
-export const getProducts = cache(async (): Promise<Product[]> => {
-  const url = await findBlobUrl('cache/products.json');
-
-  if (url) {
-    try {
-      const res = await fetch(url, { next: { tags: ['products'] } });
-      if (res.ok) return res.json();
-    } catch {
-      // Blob not available, fall through to Airtable
-    }
-  }
-
-  console.warn('Blob cache miss for products — falling back to Airtable');
-  try {
-    return await fetchProductsFromAirtable();
-  } catch (err) {
-    console.error('Failed to fetch products from both Blob and Airtable:', err);
-    return [];
-  }
-});
-
-// Site Content — reads from Vercel Blob cache, falls back to Airtable
-export const getSiteContent = cache(async (): Promise<Record<string, SiteContent>> => {
-  const url = await findBlobUrl('cache/site-content.json');
-
-  if (url) {
-    try {
-      const res = await fetch(url, { next: { tags: ['site-content'] } });
-      if (res.ok) return res.json();
-    } catch {
-      // Blob not available, fall through to Airtable
-    }
-  }
-
-  console.warn('Blob cache miss for site content — falling back to Airtable');
-  try {
-    return await fetchSiteContentFromAirtable();
-  } catch (err) {
-    console.error('Failed to fetch site content from both Blob and Airtable:', err);
-    return {};
-  }
-});
-
-// Collections — reads from Vercel Blob cache, falls back to Airtable
-export const getCollections = cache(async (): Promise<Collection[]> => {
-  const url = await findBlobUrl('cache/collections.json');
-
-  if (url) {
-    try {
-      const res = await fetch(url, { next: { tags: ['collections'] } });
-      if (res.ok) return res.json();
-    } catch {
-      // Blob not available, fall through to Airtable
-    }
-  }
-
-  console.warn('Blob cache miss for collections — falling back to Airtable');
-  try {
-    return await fetchCollectionsFromAirtable();
-  } catch (err) {
-    console.error('Failed to fetch collections from both Blob and Airtable:', err);
-    return [];
-  }
-});
+export const getCollections = cache(async (): Promise<Collection[]> => catalogFile.collections);
 
 // Products and collections together, with each product's collection set to the
 // collection's display name ("Marmol" → "Mármol"), or '' when it isn't a published

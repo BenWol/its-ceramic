@@ -4,6 +4,13 @@ import { getCatalog } from '../../../lib/airtable';
 import ProductCard from '../../components/ProductCard';
 
 export const revalidate = false;
+export const dynamicParams = false;
+
+// Every collection page is built ahead of time; unknown slugs are a 404
+export async function generateStaticParams() {
+  const { collections } = await getCatalog();
+  return collections.map((c) => ({ slug: c.slug }));
+}
 
 export default async function CollectionPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
