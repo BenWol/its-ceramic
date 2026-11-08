@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import ProductCard from './ProductCard';
 import type { Product } from '../../lib/airtable';
+import { slugify } from '../../lib/slug';
 
 // Plural labels and display order for known Airtable categories; any new category
 // still gets a filter button, labelled with its capitalised name and shown last.
@@ -13,18 +14,20 @@ const categoryLabels: Record<string, string> = {
   taza: 'Tazas',
   portavelas: 'Portavelas',
   bandeja: 'Bandejas',
+  bote: 'Botes',
 };
 
+// Airtable names may carry accents ("jarrón"), so look them up by slug
 const categoryLabel = (id: string) =>
-  categoryLabels[id] || id.charAt(0).toUpperCase() + id.slice(1);
+  categoryLabels[slugify(id)] || id.charAt(0).toUpperCase() + id.slice(1);
 
 export default function ProductFilter({ products }: { products: Product[] }) {
   const [selectedCategory, setSelectedCategory] = useState('all');
 
   const knownOrder = Object.keys(categoryLabels);
   const presentCategories = [...new Set(products.map((p) => p.category).filter(Boolean))].sort((a, b) => {
-    const ia = knownOrder.indexOf(a);
-    const ib = knownOrder.indexOf(b);
+    const ia = knownOrder.indexOf(slugify(a));
+    const ib = knownOrder.indexOf(slugify(b));
     return (ia === -1 ? knownOrder.length : ia) - (ib === -1 ? knownOrder.length : ib) || a.localeCompare(b);
   });
   const categories = [

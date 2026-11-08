@@ -1,0 +1,805 @@
+{
+  "products": [
+    {
+      "id": "recosvc6Sx1vDvXPl",
+      "name": "Tazón Origen",
+      "category": "taza",
+      "collection": "Materia",
+      "material": "Gres Toffee",
+      "technique": "Torneado a mano y esmaltado brillante",
+      "dimensions": "5,5cm altura x 9,5cm diámetro",
+      "description": "Este tazón destaca por su forma orgánica y su borde irregular, que recuerdan a la delicada silueta de una cáscara de huevo. Los matices terrosos y verdes se funden en una superficie llena de contrastes, donde las variaciones del esmalte revelan el carácter único de cada pieza.\n\nNatural y expresivo, puede utilizarse como tazón o como pequeño bol, aportando una belleza espontánea a la mesa. Disponible individualmente o en pareja. (el precio indicado es unitario)",
+      "price": 27,
+      "images": [
+        "/media/p-recosvc6Sx1vDvXPl-0-attG9d9hzcEBChbQK-1600.jpg",
+        "/media/p-recosvc6Sx1vDvXPl-1-attIUYfmJtyp6pyJd-1600.jpg",
+        "/media/p-recosvc6Sx1vDvXPl-2-attZdWLT1vrGYBuFc-1600.jpg",
+        "/media/p-recosvc6Sx1vDvXPl-3-attqWt4JDn4edp06q-1600.jpg",
+        "/media/p-recosvc6Sx1vDvXPl-4-attHuUMFGvbD92ToH-1600.jpg"
+      ],
+      "thumbnails": [
+        "/media/p-recosvc6Sx1vDvXPl-0-attG9d9hzcEBChbQK-800.jpg",
+        "/media/p-recosvc6Sx1vDvXPl-1-attIUYfmJtyp6pyJd-800.jpg",
+        "/media/p-recosvc6Sx1vDvXPl-2-attZdWLT1vrGYBuFc-800.jpg",
+        "/media/p-recosvc6Sx1vDvXPl-3-attqWt4JDn4edp06q-800.jpg",
+        "/media/p-recosvc6Sx1vDvXPl-4-attHuUMFGvbD92ToH-800.jpg"
+      ],
+      "active": true,
+      "stock": "available"
+    },
+    {
+      "id": "rec8bGruAwCu3YzDh",
+      "name": "Tazón Serena",
+      "category": "taza",
+      "collection": "Materia",
+      "material": "Gres Toffee",
+      "technique": "Torneado a mano y esmaltado brillante",
+      "dimensions": "6-7cm altura x 9-10cm diámetro",
+      "description": "Este tazón combina una forma redondeada y serena con una paleta de tonos tierra y una franja clara que recorre su superficie. La combinación de acabados y texturas aporta profundidad y evoca la sencillez de los materiales naturales.\n\nVersátil y atemporal, puede utilizarse como tazón o como pequeño bol, adaptándose a distintos momentos del día. Disponible individualmente o en pareja. (el precio indicado es unitario)",
+      "price": 23,
+      "images": [
+        "/media/p-rec8bGruAwCu3YzDh-0-att1qGzmfSimeNCcK-1600.jpg",
+        "/media/p-rec8bGruAwCu3YzDh-1-attTM7zW9OUw9miUa-1600.jpg",
+        "/media/p-rec8bGruAwCu3YzDh-2-attyOw4Ip8ExsY9mY-1600.jpg",
+        "/media/p-rec8bGruAwCu3YzDh-3-att37BDZQz88YkqTP-1600.jpg",
+        "/media/p-rec8bGruAwCu3YzDh-4-attEwrnvJpiyTOwCO-1600.jpg"
+      ],
+      "thumbnails": [
+        "/media/p-rec8bGruAwCu3YzDh-0-att1qGzmfSimeNCcK-800.jpg",
+        "/media/p-rec8bGruAwCu3YzDh-1-attTM7zW9OUw9miUa-800.jpg",
+        "/media/p-rec8bGruAwCu3YzDh-2-attyOw4Ip8ExsY9mY-800.jpg",
+        "/media/p-rec8bGruAwCu3YzDh-3-att37BDZQz88YkqTP-800.jpg",
+        "/media/p-rec8bGruAwCu3YzDh-4-attEwrnvJpiyTOwCO-800.jpg"
+      ],
+      "active": true,
+      "stock": "available"
+    },
+    {
+      "id": "recwFopD8IFl5zzOV",
+      "name": "Jarrón Órbita III",
+      "category": "jarrón",
+      "collection": "Órbita",
+      "material": "Gres PRAI Moteado",
+      "technique": "Torneado a mano, acabado en barro natural con detalle esmaltado brillante",
+      "dimensions": "21cm altura x 11cm diámetro (15cm anchura)",
+      "description": "De formas suaves y orgánicas, el jarrón Órbita destaca por su detalle escultórico en acabado brillante de efecto metálico, que aporta contraste y personalidad a la pieza. El cuerpo en acabado natural moteado realza su carácter artesanal y la belleza de la materia en estado puro.",
+      "price": 68,
+      "images": [
+        "/media/p-recwFopD8IFl5zzOV-0-attO5dQHEYCc1T1w4-1600.jpg",
+        "/media/p-recwFopD8IFl5zzOV-1-attyA1PTnftkIsNYl-1600.jpg",
+        "/media/p-recwFopD8IFl5zzOV-2-attLfSKncS52PLr3R-1600.jpg",
+        "/media/p-recwFopD8IFl5zzOV-3-attKT1WdU8fJLaMv1-1600.jpg"
+      ],
+      "thumbnails": [
+        "/media/p-recwFopD8IFl5zzOV-0-attO5dQHEYCc1T1w4-800.jpg",
+        "/media/p-recwFopD8IFl5zzOV-1-attyA1PTnftkIsNYl-800.jpg",
+        "/media/p-recwFopD8IFl5zzOV-2-attLfSKncS52PLr3R-800.jpg",
+        "/media/p-recwFopD8IFl5zzOV-3-attKT1WdU8fJLaMv1-800.jpg"
+      ],
+      "active": true,
+      "stock": "available"
+    },
+    {
+      "id": "recrUWMg8rGch0lmt",
+      "name": "Jarrón Órbita II",
+      "category": "jarrón",
+      "collection": "Órbita",
+      "material": "Gres PRAI Moteado",
+      "technique": "Torneado a mano, acabado en barro natural con detalle esmaltado brillante",
+      "dimensions": "15cm altura x 10cm diámetro (13cm anchura)",
+      "description": "De formas suaves y orgánicas, el jarrón Órbita destaca por su detalle escultórico en acabado brillante de efecto metálico, que aporta contraste y personalidad a la pieza. El cuerpo en acabado natural moteado realza su carácter artesanal y la belleza de la materia en estado puro.",
+      "price": 48,
+      "images": [
+        "/media/p-recrUWMg8rGch0lmt-0-attlPP4qkGykltbtV-1600.jpg",
+        "/media/p-recrUWMg8rGch0lmt-1-att6OGmOtekPKXTNL-1600.jpg",
+        "/media/p-recrUWMg8rGch0lmt-2-attXwSOfE6eNTVAc7-1600.jpg",
+        "/media/p-recrUWMg8rGch0lmt-3-attNxE1HMb1yoe4Zu-1600.jpg"
+      ],
+      "thumbnails": [
+        "/media/p-recrUWMg8rGch0lmt-0-attlPP4qkGykltbtV-800.jpg",
+        "/media/p-recrUWMg8rGch0lmt-1-att6OGmOtekPKXTNL-800.jpg",
+        "/media/p-recrUWMg8rGch0lmt-2-attXwSOfE6eNTVAc7-800.jpg",
+        "/media/p-recrUWMg8rGch0lmt-3-attNxE1HMb1yoe4Zu-800.jpg"
+      ],
+      "active": true,
+      "stock": "sold"
+    },
+    {
+      "id": "recsvULDKJ2NeWbpN",
+      "name": "Jarrón Órbita I",
+      "category": "jarrón",
+      "collection": "Órbita",
+      "material": "Gres PRAI Moteado",
+      "technique": "Torneado a mano, acabado en barro natural con detalle esmaltado brillante",
+      "dimensions": "12,5cm altura x 9cm diámetro (11cm anchura)",
+      "description": "De formas suaves y orgánicas, el jarrón Órbita destaca por su detalle escultórico en acabado brillante de efecto metálico, que aporta contraste y personalidad a la pieza. El cuerpo en acabado natural moteado realza su carácter artesanal y la belleza de la materia en estado puro.",
+      "price": 38,
+      "images": [
+        "/media/p-recsvULDKJ2NeWbpN-0-attrhUUEnPJIzZyON-1600.jpg",
+        "/media/p-recsvULDKJ2NeWbpN-1-attLrYURKFIC2L35j-1600.jpg",
+        "/media/p-recsvULDKJ2NeWbpN-2-attTEdF8EY1Jzuvi9-1600.jpg",
+        "/media/p-recsvULDKJ2NeWbpN-3-attdzre8vZLcXY9kY-1600.jpg"
+      ],
+      "thumbnails": [
+        "/media/p-recsvULDKJ2NeWbpN-0-attrhUUEnPJIzZyON-800.jpg",
+        "/media/p-recsvULDKJ2NeWbpN-1-attLrYURKFIC2L35j-800.jpg",
+        "/media/p-recsvULDKJ2NeWbpN-2-attTEdF8EY1Jzuvi9-800.jpg",
+        "/media/p-recsvULDKJ2NeWbpN-3-attdzre8vZLcXY9kY-800.jpg"
+      ],
+      "active": true,
+      "stock": "sold"
+    },
+    {
+      "id": "recxBBNAvw01lOfki",
+      "name": "Jarrón Marmol Mini Brown",
+      "category": "jarrón",
+      "collection": "Marmol",
+      "material": "Gres PRAI Blanca",
+      "technique": "Torneado a mano, decoración con engobes y esmaltado brillante",
+      "dimensions": "11cm altura x 8cm diámetro",
+      "description": "Este jarrón mini combina una silueta orgánica y compacta con un esmalte de matices cálidos que recuerda a vetas minerales y texturas naturales. El marrón, sobre una base de tono crema, crea un dibujo irregular y expresivo que convierte cada pieza en única.\n\nIdeal para pequeños rincones o como pieza escultórica por sí sola, aporta carácter y calidez al espacio sin perder su delicadeza.",
+      "price": 28,
+      "images": [
+        "/media/p-recxBBNAvw01lOfki-0-attYs5jP9uzsAhNfP-1600.jpg",
+        "/media/p-recxBBNAvw01lOfki-1-attUKDaySZ41JMMb7-1600.jpg",
+        "/media/p-recxBBNAvw01lOfki-2-attEWiYzcMesIj7Sg-1600.jpg"
+      ],
+      "thumbnails": [
+        "/media/p-recxBBNAvw01lOfki-0-attYs5jP9uzsAhNfP-800.jpg",
+        "/media/p-recxBBNAvw01lOfki-1-attUKDaySZ41JMMb7-800.jpg",
+        "/media/p-recxBBNAvw01lOfki-2-attEWiYzcMesIj7Sg-800.jpg"
+      ],
+      "active": true,
+      "stock": "available"
+    },
+    {
+      "id": "recmKgFKYK8gb5RfZ",
+      "name": "Bote Wood",
+      "category": "bote",
+      "collection": "Materia",
+      "material": "Gres PRAI Blanca",
+      "technique": "Torneado a mano y esmaltado brillante",
+      "dimensions": "12cm altura x 15,5cm diámetro",
+      "description": "Este bote combina un volumen redondeado con una superficie de matices marrones y ocres que evoca las vetas y los anillos de la madera. El dibujo irregular se extiende también a la tapa, creando una composición continua en la que el color y la textura cobran protagonismo.\n\nUna pieza funcional y escultórica a la vez, pensada para guardar pequeños objetos o decorar el espacio con la calidez de los materiales naturales.",
+      "price": 65,
+      "images": [
+        "/media/p-recmKgFKYK8gb5RfZ-0-attuwGxgBEFarbEOW-1600.jpg",
+        "/media/p-recmKgFKYK8gb5RfZ-1-attAaDpJSAl7D156U-1600.jpg",
+        "/media/p-recmKgFKYK8gb5RfZ-2-attYUJisMChlyQyEQ-1600.jpg"
+      ],
+      "thumbnails": [
+        "/media/p-recmKgFKYK8gb5RfZ-0-attuwGxgBEFarbEOW-800.jpg",
+        "/media/p-recmKgFKYK8gb5RfZ-1-attAaDpJSAl7D156U-800.jpg",
+        "/media/p-recmKgFKYK8gb5RfZ-2-attYUJisMChlyQyEQ-800.jpg"
+      ],
+      "active": true,
+      "stock": "available"
+    },
+    {
+      "id": "recrUFoDgesXYwD7q",
+      "name": "Jarrón Marmol Blanco",
+      "category": "jarrón",
+      "collection": "Marmol",
+      "material": "Gres PRAI Blanca",
+      "technique": "Torneado a mano, decoración con engobes y esmaltado brillante",
+      "dimensions": "9cm altura x 8cm diámetro",
+      "description": "De formato pequeño y orgánico, este jarrón destaca por su sencillez y calidez. El esmalte blanco moteado aporta una textura sutil y natural, ideal para pequeñas flores secas o como objeto decorativo en cualquier rincón de la casa.\n\nSu tamaño compacto invita a combinarlo con otras piezas de la colección Mármol, creando composiciones equilibradas y atemporales.",
+      "price": 25,
+      "images": [
+        "/media/p-recrUFoDgesXYwD7q-0-attiW5wkupXIysr8p-1600.jpg",
+        "/media/p-recrUFoDgesXYwD7q-1-attJ0vjACCdLI3NNB-1600.jpg",
+        "/media/p-recrUFoDgesXYwD7q-2-attsImoxenSTD9jeN-1600.jpg"
+      ],
+      "thumbnails": [
+        "/media/p-recrUFoDgesXYwD7q-0-attiW5wkupXIysr8p-800.jpg",
+        "/media/p-recrUFoDgesXYwD7q-1-attJ0vjACCdLI3NNB-800.jpg",
+        "/media/p-recrUFoDgesXYwD7q-2-attsImoxenSTD9jeN-800.jpg"
+      ],
+      "active": true,
+      "stock": "available"
+    },
+    {
+      "id": "recXIMtvCTjwUjOcy",
+      "name": "Jarrón Marmol Celeste",
+      "category": "jarrón",
+      "collection": "Marmol",
+      "material": "Gres PRAI Blanca",
+      "technique": "Torneado a mano, decoración con engobes y esmaltado brillante",
+      "dimensions": "14cm altura × 12cm diámetro",
+      "description": "Este jarrón de tamaño medio combina una silueta equilibrada con un esmalte de matices suaves que recuerda a vetas minerales y superficies pulidas por el tiempo. El azul, luminoso y sereno, aporta calma y frescura visual sin imponerse.\n\nFunciona con flores secas o ramas, o como pieza escultórica por sí sola. Discreto pero expresivo, se integra con naturalidad y armonía en el espacio.",
+      "price": 61,
+      "images": [
+        "/media/p-recXIMtvCTjwUjOcy-0-attQN4CZx3g4A7GeK-1600.jpg",
+        "/media/p-recXIMtvCTjwUjOcy-1-attiNq1sUAeIKZbIa-1600.jpg",
+        "/media/p-recXIMtvCTjwUjOcy-2-attQ4VALACKqENagU-1600.jpg"
+      ],
+      "thumbnails": [
+        "/media/p-recXIMtvCTjwUjOcy-0-attQN4CZx3g4A7GeK-800.jpg",
+        "/media/p-recXIMtvCTjwUjOcy-1-attiNq1sUAeIKZbIa-800.jpg",
+        "/media/p-recXIMtvCTjwUjOcy-2-attQ4VALACKqENagU-800.jpg"
+      ],
+      "active": true,
+      "stock": "available"
+    },
+    {
+      "id": "recd3MNpa8crY50Au",
+      "name": "Portavelas Marmol Azul",
+      "category": "portavelas",
+      "collection": "Marmol",
+      "material": "Gres PRAI Blanca",
+      "technique": "Torneado a mano, decoración con engobes y esmaltado brillante",
+      "dimensions": "4cm altura x 9cm diámetro",
+      "description": "Su forma recogida y el esmalte moteado crean un juego de contrastes sutiles que cambia según esté encendido o apagado.\n\nPensado para acompañar momentos cotidianos, aporta una luz suave y cálida cuando la vela está encendida, y mantiene su presencia escultórica incluso en reposo.\n\nEl diámetro interior es de 2 cm, adecuado para velas de candelero.\n",
+      "price": 18,
+      "images": [
+        "/media/p-recd3MNpa8crY50Au-0-att6Wkz4xs8vQ2XAV-1600.jpg",
+        "/media/p-recd3MNpa8crY50Au-1-attnXtIm1DzgotdIZ-1600.jpg"
+      ],
+      "thumbnails": [
+        "/media/p-recd3MNpa8crY50Au-0-att6Wkz4xs8vQ2XAV-800.jpg",
+        "/media/p-recd3MNpa8crY50Au-1-attnXtIm1DzgotdIZ-800.jpg"
+      ],
+      "active": true,
+      "stock": "sold"
+    },
+    {
+      "id": "rec07Lr10bImhNsRu",
+      "name": "Portavelas Marmol Lila",
+      "category": "portavelas",
+      "collection": "Marmol",
+      "material": "Gres PRAI Blanca",
+      "technique": "Torneado a mano, decoración con engobes y esmaltado brillante",
+      "dimensions": "3cm altura x 9,5cm diámetro",
+      "description": "Su forma recogida y el esmalte moteado crean un juego de contrastes sutiles que cambia según esté encendido o apagado.\n\nPensado para acompañar momentos cotidianos, aporta una luz suave y cálida cuando la vela está encendida, y mantiene su presencia escultórica incluso en reposo.\n\nEl diámetro interior es de 4 cm, adecuado para velas pequeñas tipo tealight.\n",
+      "price": 18,
+      "images": [
+        "/media/p-rec07Lr10bImhNsRu-0-attdYjC6SDm947Ozj-1600.jpg",
+        "/media/p-rec07Lr10bImhNsRu-1-attJPjpvYtkmeeSgL-1600.jpg"
+      ],
+      "thumbnails": [
+        "/media/p-rec07Lr10bImhNsRu-0-attdYjC6SDm947Ozj-800.jpg",
+        "/media/p-rec07Lr10bImhNsRu-1-attJPjpvYtkmeeSgL-800.jpg"
+      ],
+      "active": true,
+      "stock": "available"
+    },
+    {
+      "id": "recfp9ObzEip2W9S3",
+      "name": "Taza Expresso Tierra",
+      "category": "taza",
+      "collection": "Materia",
+      "material": "Gres PRAI Moteado",
+      "technique": "Torneado a mano y esmaltado brillante",
+      "dimensions": "4cm altura x 5,5cm diámetro",
+      "description": "De estética honesta y táctil, esta pequeña taza de la colección Materia celebra la belleza de lo elemental. Con esencia terrosa y minimalista, destaca por su contraste de texturas: una base natural con pequeñas motas y un esmalte superior que evoca la calidez de la tierra mojada.\n\nCon una capacidad de 50 ml, su forma orgánica está diseñada para adaptarse cómodamente a la mano, convirtiéndola en la compañera ideal para el ritual del café espresso o un té corto. ",
+      "price": 18,
+      "images": [
+        "/media/p-recfp9ObzEip2W9S3-0-attFXExB40Sd4mF05-1600.jpg"
+      ],
+      "thumbnails": [
+        "/media/p-recfp9ObzEip2W9S3-0-attFXExB40Sd4mF05-800.jpg"
+      ],
+      "active": true,
+      "stock": "sold"
+    },
+    {
+      "id": "rec9H5sSn3cLU8WnW",
+      "name": "Jarra Nature Pecas",
+      "category": "jarra",
+      "collection": "Materia",
+      "material": "Arcilla de Gres PRAI Moteado",
+      "technique": "Torneado a mano, decoración con engobes y esmaltado brillante",
+      "dimensions": "15cm altura x 11cm diámetro",
+      "description": "De forma orgánica y presencia serena, esta jarra destaca por su acabado natural salpicado de pequeñas pecas que aportan textura y profundidad a la superficie.\n\nPensada para el uso cotidiano, combina funcionalidad y carácter artesanal. Tiene una capacidad aproximada de 750 ml, ideal para servir agua, leche u otras bebidas.",
+      "price": 55,
+      "images": [
+        "/media/p-rec9H5sSn3cLU8WnW-0-attcp2iMxxomxAhGZ-1600.jpg"
+      ],
+      "thumbnails": [
+        "/media/p-rec9H5sSn3cLU8WnW-0-attcp2iMxxomxAhGZ-800.jpg"
+      ],
+      "active": true,
+      "stock": "sold"
+    },
+    {
+      "id": "recQ8TP1KaODcLayA",
+      "name": "Taza Cafe Neriage",
+      "category": "taza",
+      "collection": "Materia",
+      "material": "Gres PRAI Blanca + Gres Toffee",
+      "technique": "Torneado a mano y esmaltado brillante",
+      "dimensions": "6cm altura x 7cm diámetro",
+      "description": "Geometría orgánica y movimiento. Esta pieza nace de la técnica tradicional Neriage, donde la combinación de diferentes arcillas crea un veteado natural que fluye por toda la superficie, haciendo que cada patrón sea irrepetible.\n\nCon una capacidad de 140 ml, su silueta redondeada y sin asa invita a abrazar la taza con las manos, permitiendo sentir la calidez de la bebida y la suavidad de su acabado. Un diseño equilibrado, perfecto para disfrutar de un café con leche largo o un té pausado, aportando una estética artesanal única a tu mesa.",
+      "price": 21,
+      "images": [
+        "/media/p-recQ8TP1KaODcLayA-0-attI6SwaIhuJ3yDDF-1600.jpg"
+      ],
+      "thumbnails": [
+        "/media/p-recQ8TP1KaODcLayA-0-attI6SwaIhuJ3yDDF-800.jpg"
+      ],
+      "active": true,
+      "stock": "available"
+    },
+    {
+      "id": "recivpnZBBog6g9Mp",
+      "name": "Taza Latte Salpicada",
+      "category": "taza",
+      "collection": "Materia",
+      "material": "Gres PRAI Blanca",
+      "technique": "Torneado a mano, decoración con engobes y esmaltado brillante",
+      "dimensions": "6cm altura x 10cm diámetro",
+      "description": "De forma sencilla y equilibrada, esta taza está pensada para el uso diario. Las salpicaduras en color negro aportan contraste y un ritmo gráfico sutil, manteniendo una estética natural y honesta.\n\nCómoda en la mano y resistente, es una pieza que invita a acompañar rituales cotidianos. Tiene una capacidad aproximada de 300 ml.",
+      "price": 25,
+      "images": [
+        "/media/p-recivpnZBBog6g9Mp-0-attMIGJOP7rBoERgi-1600.jpg"
+      ],
+      "thumbnails": [
+        "/media/p-recivpnZBBog6g9Mp-0-attMIGJOP7rBoERgi-800.jpg"
+      ],
+      "active": true,
+      "stock": "sold"
+    },
+    {
+      "id": "rec6E3O3NAWylj9lP",
+      "name": "Jarrón Rayas Botella",
+      "category": "jarrón",
+      "collection": "Circus",
+      "material": "Gres PRAI Blanca",
+      "technique": "Torneado a mano, decoración con engobes y esmaltado brillante",
+      "dimensions": "12cm altura x 12cm diámetro",
+      "description": "Con una decoración a rayas en verde botella, este jarrón combina intensidad cromática y elegancia. El contraste entre forma y color crea una pieza con fuerza visual, manteniendo al mismo tiempo un carácter sobrio.\n\nPensado para integrarse tanto solo como junto a otras piezas de la colección Circus, aporta profundidad y personalidad al conjunto.",
+      "price": 47,
+      "images": [
+        "/media/p-rec6E3O3NAWylj9lP-0-attD9uNdORZzScQ2Q-1600.jpg"
+      ],
+      "thumbnails": [
+        "/media/p-rec6E3O3NAWylj9lP-0-attD9uNdORZzScQ2Q-800.jpg"
+      ],
+      "active": true,
+      "stock": "sold"
+    },
+    {
+      "id": "recuIGCBZohjiyHve",
+      "name": "Jarrón Rayas Azul",
+      "category": "jarrón",
+      "collection": "Circus",
+      "material": "Gres PRAI Blanca",
+      "technique": "Torneado a mano, decoración con engobes y esmaltado brillante",
+      "dimensions": "16cm altura x 12cm diámetro",
+      "description": "De gran formato y carácter expresivo, este jarrón destaca por su color azul intenso y su presencia escultórica. El esmalte crea un juego de matices y reflejos que aporta ritmo visual, en línea con el lenguaje gráfico de la colección Circus.\n\nPensado como pieza protagonista, funciona tanto en solitario como acompañado de otras piezas de la colección. Su tamaño y su fuerza cromática lo convierten en un elemento central dentro del conjunto Circus.",
+      "price": 61,
+      "images": [
+        "/media/p-recuIGCBZohjiyHve-0-attcJ03r4gIvkvNg1-1600.jpg"
+      ],
+      "thumbnails": [
+        "/media/p-recuIGCBZohjiyHve-0-attcJ03r4gIvkvNg1-800.jpg"
+      ],
+      "active": true,
+      "stock": "sold"
+    },
+    {
+      "id": "rec1eYR2S8MoZh3Sf",
+      "name": "Set Naranja Dot",
+      "category": "set",
+      "collection": "Materia",
+      "material": "Arcilla de Gres PRAI Moteado",
+      "technique": "Torneado a mano, acabado en barro natural con detalles pintados con engobe y esmaltado brillante",
+      "dimensions": "13cm altura x 8,5cm diámetro / 4cm altura x 5,5cm diámetro",
+      "description": "Esencia terrosa con un punto de energía. Este set destaca por el contraste entre su base natural salpicada y el vibrante naranja que ilumina el asa y el interior de las piezas.\n\nCon una jarra de 400 ml y tacitas de 50 ml, su diseño orgánico está pensado para adaptarse cómodamente a la mano, elevando el ritual de compartir un café espresso o un té corto. Un juego de volúmenes que equilibra la calidez de la tierra con un toque contemporáneo y artesanal.",
+      "price": 85,
+      "images": [
+        "/media/p-rec1eYR2S8MoZh3Sf-0-atte20Ifnhn6FYYLL-1600.jpg"
+      ],
+      "thumbnails": [
+        "/media/p-rec1eYR2S8MoZh3Sf-0-atte20Ifnhn6FYYLL-800.jpg"
+      ],
+      "active": true,
+      "stock": "sold"
+    },
+    {
+      "id": "recKIYBZXf28Yu3a1",
+      "name": "Jarrón Rayas Fresa",
+      "category": "jarrón",
+      "collection": "Circus",
+      "material": "Gres PRAI Blanca",
+      "technique": "Torneado a mano, decoración con engobes y esmaltado brillante",
+      "dimensions": "20cm altura x 12cm diámetro",
+      "description": "De silueta alargada y forma de botella, este jarrón destaca por su carácter escultórico y su presencia vertical. El esmalte rosa aporta calidez y un punto lúdico, reforzando el espíritu expresivo de la colección Circus.\n\nFunciona como pieza protagonista, tanto en solitario como dentro de una composición.",
+      "price": 68,
+      "images": [
+        "/media/p-recKIYBZXf28Yu3a1-0-attyD0vEQNxDwuQh2-1600.jpg"
+      ],
+      "thumbnails": [
+        "/media/p-recKIYBZXf28Yu3a1-0-attyD0vEQNxDwuQh2-800.jpg"
+      ],
+      "active": true,
+      "stock": "available"
+    },
+    {
+      "id": "recyqi30JIDZOjiwX",
+      "name": "Jarrón Rayas Calabaza",
+      "category": "jarrón",
+      "collection": "Circus",
+      "material": "Gres PRAI Blanca",
+      "technique": "Torneado a mano, decoración con engobes y esmaltado brillante",
+      "dimensions": "12cm altura x 12cm diámetro",
+      "description": "Este jarrón de tamaño medio se caracteriza por su decoración a rayas en tono calabaza, que aporta ritmo visual y contraste a la pieza. Su forma equilibrada y su acabado gráfico reflejan el lado más dinámico de la colección Circus.\n\nIdeal para dar un toque de color a cualquier espacio, puede utilizarse con flores o como objeto decorativo por sí mismo.",
+      "price": 47,
+      "images": [
+        "/media/p-recyqi30JIDZOjiwX-0-attmQJQ5R4n7LgIYW-1600.jpg"
+      ],
+      "thumbnails": [
+        "/media/p-recyqi30JIDZOjiwX-0-attmQJQ5R4n7LgIYW-800.jpg"
+      ],
+      "active": true,
+      "stock": "sold"
+    },
+    {
+      "id": "recx7yT0QTdRgmbxK",
+      "name": "Jarrón Mármol Rosa",
+      "category": "jarrón",
+      "collection": "Marmol",
+      "material": "Gres PRAI Blanca",
+      "technique": "Torneado a mano, decoración con engobes y esmaltado brillante",
+      "dimensions": "19cm altura × 12cm diámetro",
+      "description": "De forma generosa y presencia serena, este jarrón destaca por su esmalte moteado en tonos rosados suaves, que aporta profundidad y matices sutiles a la superficie.\n\nPensado como pieza protagonista, funciona tanto con ramas, flores secas o simplemente como objeto escultórico.",
+      "price": 68,
+      "images": [
+        "/media/p-recx7yT0QTdRgmbxK-0-att4yceBbvR5AzgDw-1600.jpg"
+      ],
+      "thumbnails": [
+        "/media/p-recx7yT0QTdRgmbxK-0-att4yceBbvR5AzgDw-800.jpg"
+      ],
+      "active": true,
+      "stock": "sold"
+    },
+    {
+      "id": "rec9kZpDlihR1ZFg3",
+      "name": "Jarrón Marmol Lila",
+      "category": "jarrón",
+      "collection": "Marmol",
+      "material": "Gres PRAI Blanca",
+      "technique": "Torneado a mano, decoración con engobes y esmaltado brillante",
+      "dimensions": "11cm altura x 9cm diámetro",
+      "description": "De formato más contenido, este jarrón destaca por su delicadeza. El esmalte lila moteado aporta un toque suave y luminoso, ideal para pequeños ramos o como pieza decorativa en estanterías y mesas.\n\nSu tamaño invita a combinarlo con otros jarrones de la colección Mármol, creando composiciones sencillas y armónicas. ",
+      "price": 35,
+      "images": [
+        "/media/p-rec9kZpDlihR1ZFg3-0-att0ESeXZlJ0q65GE-1600.jpg"
+      ],
+      "thumbnails": [
+        "/media/p-rec9kZpDlihR1ZFg3-0-att0ESeXZlJ0q65GE-800.jpg"
+      ],
+      "active": true,
+      "stock": "sold"
+    },
+    {
+      "id": "recBq6NUEruY17wsJ",
+      "name": "Jarrón Marmol Gris",
+      "category": "jarrón",
+      "collection": "Marmol",
+      "material": "Gres PRAI Blanca",
+      "technique": "Torneado a mano, decoración con engobes y esmaltado brillante",
+      "dimensions": "14cm altura × 12cm diámetro",
+      "description": "Este jarrón de tamaño medio combina equilibrio y carácter. El esmalte gris moteado crea un efecto pétreo y atemporal, aportando calma y sobriedad a cualquier espacio.\n\nVersátil y fácil de integrar, puede utilizarse solo o acompañado de otras piezas de la colección Mármol, estableciendo un diálogo de formas y tonos.",
+      "price": 61,
+      "images": [
+        "/media/p-recBq6NUEruY17wsJ-0-attDcl739at28ImhV-1600.jpg"
+      ],
+      "thumbnails": [
+        "/media/p-recBq6NUEruY17wsJ-0-attDcl739at28ImhV-800.jpg"
+      ],
+      "active": true,
+      "stock": "available"
+    },
+    {
+      "id": "rec0ONcYoQzjowFv3",
+      "name": "Jarrón Marmol Azul",
+      "category": "jarrón",
+      "collection": "Marmol",
+      "material": "Gres PRAI Blanca",
+      "technique": "Torneado a mano, decoración con engobes y esmaltado brillante",
+      "dimensions": "15cm altura × 12cm diámetro",
+      "description": "Este jarrón de tamaño medio combina una silueta equilibrada con un esmalte de matices suaves que recuerda a vetas minerales y superficies pulidas por el tiempo. El azul, luminoso y sereno, aporta calma y frescura visual sin imponerse.\n\nFunciona con flores secas o ramas, o como pieza escultórica por sí sola. Discreto pero expresivo, se integra con naturalidad y armonía en el espacio.",
+      "price": 61,
+      "images": [
+        "/media/p-rec0ONcYoQzjowFv3-0-attYUpbOM0biQqSKp-1600.jpg"
+      ],
+      "thumbnails": [
+        "/media/p-rec0ONcYoQzjowFv3-0-attYUpbOM0biQqSKp-800.jpg"
+      ],
+      "active": true,
+      "stock": "sold"
+    },
+    {
+      "id": "recRHF0594UR5NyYd",
+      "name": "Bandeja Blonda Salpicada",
+      "category": "bandeja",
+      "collection": "Materia",
+      "material": "Gres PRAI Blanca",
+      "technique": "Torneado a mano, decoración con engobes y esmaltado brillante",
+      "dimensions": "4,5cm altura x 17cm diámetro",
+      "description": "Bandeja de formas orgánicas y borde ondulado, con un gesto que remite a piezas de cerámica de otros tiempos. El acabado en barro claro con salpicaduras negras aporta profundidad y carácter, entre lo rústico y lo delicado. \nPensada para acompañar el día a día —como bandeja de mesa, pieza decorativa o soporte para pequeños objetos—, mantiene un equilibrio natural entre uso y estética.",
+      "price": 35,
+      "images": [
+        "/media/p-recRHF0594UR5NyYd-0-attnbuhT1KiQllLez-1600.jpg"
+      ],
+      "thumbnails": [
+        "/media/p-recRHF0594UR5NyYd-0-attnbuhT1KiQllLez-800.jpg"
+      ],
+      "active": true,
+      "stock": "sold"
+    }
+  ],
+  "siteContent": {
+    "hero": {
+      "id": "recU6XrznaxMAZyDf",
+      "key": "hero",
+      "image": "/media/s-recU6XrznaxMAZyDf-attmzpBaGLQriR7Mr-1600.jpg",
+      "alt": "Materia, forma y gesto",
+      "title": "Materia, forma y gesto",
+      "description": "Cerámica artesanal hecha a mano en Barcelona. Piezas funcionales y escultóricas en producción limitada."
+    },
+    "collection-circus": {
+      "id": "recI0aRLFZdKxOSvm",
+      "key": "collection-circus",
+      "image": "/media/s-recI0aRLFZdKxOSvm-att5aqQ0vp7Y4KNpl-1600.jpg",
+      "alt": "Circus",
+      "title": "Circus",
+      "description": "Color, gesto y formas con espíritu lúdico. Jarrones de cerámica artesanal de formas redondeadas y estética expresiva. Piezas con un espíritu lúdico y contemporáneo, concebidas como objetos decorativos con identidad propia."
+    },
+    "collection-marmol": {
+      "id": "rec3PWhkSlgDqgX4X",
+      "key": "collection-marmol",
+      "image": "/media/s-rec3PWhkSlgDqgX4X-attpw6KSJ2OSdcdA4-1600.jpg",
+      "alt": "Mármol",
+      "title": "Mármol",
+      "description": "Superficies suaves y vetas sutiles. Cerámica artesanal inspirada en las vetas y contrastes del mármol. Piezas únicas de carácter decorativo, donde el color y la superficie adquieren protagonismo."
+    },
+    "collection-materia": {
+      "id": "recJNKy20e9Cj2dVi",
+      "key": "collection-materia",
+      "image": "/media/s-recJNKy20e9Cj2dVi-attiStJiolXo3vOHA-1600.jpg",
+      "alt": "Materia",
+      "title": "Materia",
+      "description": "Uso cotidiano, textura y calma. Cerámica artesanal de mesa en tonos tierra, pensada para el uso cotidiano. Piezas funcionales de formas orgánicas que acompañan la mesa del día a día."
+    },
+    "collections-intro": {
+      "id": "recgqyGYaoXrlyNqy",
+      "key": "collections-intro",
+      "image": "",
+      "alt": "-",
+      "title": "-",
+      "description": "Cuatro colecciones. Un mismo lenguaje artesanal."
+    },
+    "about-home": {
+      "id": "recNI8a6JKGdWKtNj",
+      "key": "about-home",
+      "image": "/media/s-recNI8a6JKGdWKtNj-attvWoWOmPqPKwaCX-1600.jpg",
+      "alt": "-",
+      "title": "Tradición hecha presente",
+      "description": "Cada pieza se trabaja a mano, respetando los tiempos lentos del proceso. Cerámica en pequeñas series, pensada para convivir con el día a día y mantener visible el gesto artesanal."
+    },
+    "about-artist": {
+      "id": "rec5sKMEANXIqSI0d",
+      "key": "about-artist",
+      "image": "/media/s-rec5sKMEANXIqSI0d-atts4jkOLQCYudaMG-1600.jpg",
+      "alt": "La artista",
+      "title": "—",
+      "description": "—"
+    },
+    "about-intro": {
+      "id": "recTmhzKJoMSU0KPB",
+      "key": "about-intro",
+      "image": "",
+      "alt": "",
+      "title": "",
+      "description": "**Its ceramic** nace del diálogo entre lo artesanal y lo contemporáneo."
+    },
+    "about-work": {
+      "id": "recEu6pdf9nk9qCiq",
+      "key": "about-work",
+      "image": "",
+      "alt": "-",
+      "title": "-",
+      "description": "Llegué a la cerámica impulsada por la curiosidad y la búsqueda de un lenguaje creativo nuevo. Siempre he sentido la necesidad de crear con mis manos, pero en el barro encontré un espacio de calma y concentración inédito. El trabajo en el torno se convirtió en mi forma de estar presente: un proceso en el que el tiempo se detiene y la atención se centra únicamente en el ahora y en lo que hacen las manos."
+    },
+    "about-philosophy": {
+      "id": "recjrBr4YCg3egbde",
+      "key": "about-philosophy",
+      "image": "",
+      "alt": "-",
+      "title": "-",
+      "description": "Tradición hecha presente. \nIts pottery, its handcraft, its me."
+    },
+    "about-studio": {
+      "id": "receKyqJqLuK2ej07",
+      "key": "about-studio",
+      "image": "",
+      "alt": "-",
+      "title": "-",
+      "description": "Mi taller está ubicado en Barcelona, donde trabajo cada día creando nuevas piezas y desarrollando mis colecciones."
+    },
+    "about-studio-1": {
+      "id": "recpBqNtkRAjSAhZx",
+      "key": "about-studio-1",
+      "image": "",
+      "alt": "Foto taller 1",
+      "title": "—",
+      "description": "—"
+    },
+    "about-studio-2": {
+      "id": "recuDNhGgqKGW8pbC",
+      "key": "about-studio-2",
+      "image": "",
+      "alt": "Foto taller 2",
+      "title": "—",
+      "description": "—"
+    },
+    "about-studio-3": {
+      "id": "recvOYoenfB7FDk2f",
+      "key": "about-studio-3",
+      "image": "",
+      "alt": "Foto taller 3",
+      "title": "-",
+      "description": "—"
+    },
+    "instagram-1": {
+      "id": "recvkpSwGEkNmE237",
+      "key": "instagram-1",
+      "image": "",
+      "alt": "Instagram 1",
+      "title": "—",
+      "description": "-"
+    },
+    "instagram-2": {
+      "id": "rec80Mis5k2dG7PQi",
+      "key": "instagram-2",
+      "image": "",
+      "alt": "Instagram 2",
+      "title": "-",
+      "description": "-"
+    },
+    "instagram-3": {
+      "id": "recAQr35PDwUkq6P2",
+      "key": "instagram-3",
+      "image": "",
+      "alt": "Instagram 3",
+      "title": "—",
+      "description": "-"
+    },
+    "instagram-4": {
+      "id": "recBR674ix3N5FQ9u",
+      "key": "instagram-4",
+      "image": "",
+      "alt": "Instagram 4",
+      "title": "—",
+      "description": "—"
+    },
+    "instagram-intro": {
+      "id": "recPNbqdz7GuQOoQu",
+      "key": "instagram-intro",
+      "image": "",
+      "alt": "—",
+      "title": "—",
+      "description": "Sígueme en Instagram para ver el proceso y las últimas novedades."
+    },
+    "contact-cta": {
+      "id": "recqQscLYmZpCVlRv",
+      "key": "contact-cta",
+      "image": "",
+      "alt": "—",
+      "title": "¿Hablamos?",
+      "description": "Si quieres consultar más detalles sobre mi obra, proponer una colaboración o estás interesado en alguna de las piezas del catálogo, escríbeme por email o Instagram. Estaré encantada de atenderte de forma personalizada."
+    },
+    "about-bullets": {
+      "id": "rechNyMmJC50AtfzV",
+      "key": "about-bullets",
+      "image": "",
+      "alt": "",
+      "title": "",
+      "description": "Torneadas y esmaltadas a mano\nProducción limitada\nPeticiones personalizadas"
+    },
+    "about-intro-2": {
+      "id": "recUCc442bkvCWClf",
+      "key": "about-intro-2",
+      "image": "",
+      "alt": "",
+      "title": "",
+      "description": "Trabajo la cerámica desde técnicas tradicionales, respetando los procesos manuales y los tiempos lentos del oficio, pero con una mirada actual.\n\nMis piezas se caracterizan por formas limpias, color contenido y una estética sobria, pensadas para convivir con el día a día e integrarse con naturalidad en espacios contemporáneos. Cada objeto busca un equilibrio entre funcionalidad y presencia, manteniendo visible el gesto artesanal que le da sentido."
+    },
+    "product-notice": {
+      "id": "recZxoJuvcVGsE1Q9",
+      "key": "product-notice",
+      "image": "",
+      "alt": "",
+      "title": "",
+      "description": "Cada pieza está hecha a mano, por lo que puede presentar ligeras variaciones de forma o color que forman parte de su carácter único.\nCerámica de alta temperatura, apta para uso alimentario, lavavajillas y/o para contener líquidos."
+    },
+    "shipping-interest": {
+      "id": "rec1z0pdDP4u6V9Ms",
+      "key": "shipping-interest",
+      "image": "",
+      "alt": "",
+      "title": "Gastos de envío",
+      "description": "Cada pieza se embala a mano con mucho cuidado. Estos son los gastos de envío de esta pieza según la zona:"
+    },
+    "shipping-encargo": {
+      "id": "recq6VHO9oACmaBA8",
+      "key": "shipping-encargo",
+      "image": "",
+      "alt": "",
+      "title": "Gastos de envío",
+      "description": "Al ser una pieza por encargo, el peso final puede variar un poco. Te confirmaré el precio exacto del envío cuando la pieza esté terminada. Como referencia:"
+    },
+    "shipping-general": {
+      "id": "recBAp9wxWo4MwHQ3",
+      "key": "shipping-general",
+      "image": "",
+      "alt": "",
+      "title": "Gastos de envío",
+      "description": "Por si te interesa alguna pieza, estos son los gastos de envío según la zona y el peso de la pieza embalada:"
+    },
+    "purchase-interest": {
+      "id": "recrWWS1DReD97AwF",
+      "key": "purchase-interest",
+      "image": "",
+      "alt": "",
+      "title": "¿Quieres esta pieza?",
+      "description": "Responde a este email y te la reservo.\nEl pago se hace por Bizum: el precio de la pieza más el envío. Te paso los datos al confirmar la reserva.\nEn cuanto reciba el pago, la embalo con cuidado y te la envío (o quedamos para la recogida)."
+    },
+    "purchase-encargo": {
+      "id": "recGdux2KXbWuun81",
+      "key": "purchase-encargo",
+      "image": "",
+      "alt": "",
+      "title": "¿Cómo funciona el encargo?",
+      "description": "Responde a este email con lo que tienes en mente y te confirmo el precio y el plazo.\nPara empezar la pieza se paga un 50 % por Bizum como señal.\nEl 50 % restante y el envío se pagan cuando la pieza esté terminada, antes de enviarla."
+    },
+    "purchase-general": {
+      "id": "recVjHErOrnU7zrse",
+      "key": "purchase-general",
+      "image": "",
+      "alt": "",
+      "title": "¿Cómo comprar una pieza?",
+      "description": "-"
+    }
+  },
+  "collections": [
+    {
+      "id": "recHQggOPlbUrR8Ql",
+      "name": "Órbita",
+      "slug": "orbita",
+      "description": "Volumen, contraste y un gesto escultórico. Jarrones de cerámica artesanal de formas suaves y cuerpo en gres natural moteado, coronados por un aro de acabado brillante con efecto metálico. Piezas decorativas donde la materia en estado puro y el brillo del detalle encuentran su equilibrio.",
+      "image": "/media/c-recHQggOPlbUrR8Ql-attjUwABlchZdIFMI-1600.jpg",
+      "alt": "Tres jarrones Órbita de gres moteado con aro metálico",
+      "order": 1
+    },
+    {
+      "id": "recaf07AdgvVru4jW",
+      "name": "Mármol",
+      "slug": "marmol",
+      "description": "Superficies suaves y vetas sutiles. Cerámica artesanal inspirada en las vetas y contrastes del mármol. Piezas únicas de carácter decorativo, donde el color y la superficie adquieren protagonismo.",
+      "image": "/media/c-recaf07AdgvVru4jW-attt9VvkwXMwojDE5-1600.jpg",
+      "alt": "Mármol",
+      "order": 2
+    },
+    {
+      "id": "recCsfP8Ybddq3OsM",
+      "name": "Circus",
+      "slug": "circus",
+      "description": "Color, gesto y formas con espíritu lúdico. Jarrones de cerámica artesanal de formas redondeadas y estética expresiva. Piezas con un espíritu lúdico y contemporáneo, concebidas como objetos decorativos con identidad propia.",
+      "image": "/media/c-recCsfP8Ybddq3OsM-attpkpiOQwdLUfUPa-1600.jpg",
+      "alt": "Circus",
+      "order": 3
+    },
+    {
+      "id": "rec7RzTN6wCa9o1Nq",
+      "name": "Materia",
+      "slug": "materia",
+      "description": "Uso cotidiano, textura y calma. Cerámica artesanal de mesa en tonos tierra, pensada para el uso cotidiano. Piezas funcionales de formas orgánicas que acompañan la mesa del día a día.",
+      "image": "/media/c-rec7RzTN6wCa9o1Nq-attfpuJsRKnRlMmHm-1600.jpg",
+      "alt": "Materia",
+      "order": 4
+    }
+  ]
+}

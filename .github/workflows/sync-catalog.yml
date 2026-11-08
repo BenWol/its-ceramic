@@ -1,0 +1,47 @@
+# Copies the catalog from Airtable into the repo (data/catalog.json + public/media).
+# When something changed it commits to main, and Vercel publishes the new version.
+# Started by the refresh link (/api/revalidate) or by hand from the Actions tab.
+name: Sync catalog from Airtable
+
+on:
+  repository_dispatch:
+    types: [sync-catalog]
+  workflow_dispatch:
+
+concurrency:
+  group: sync-catalog
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Copy catalog and photos from Airtable
+        run: node scripts/sync-catalog.mjs
+        env:
+          AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
+          AIRTABLE_BASE_ID: ${{ secrets.AIRTABLE_BASE_ID }}
+
+      - name: Publish if anything changed
+        run: |
+          git add data public/media
+          if git diff --cached --quiet; then
+            echo "No changes in Airtable — nothing to publish"
+            exit 0
+          fi
+          git config user.name "its-ceramic sync"
+          git config user.email "actions@github.com"
+          git commit -m "Sync catalog from Airtable"
+          git push
